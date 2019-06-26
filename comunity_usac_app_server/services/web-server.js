@@ -1,8 +1,8 @@
 const http = require('http');
-const database = require('./database');
 const morgan = require('morgan');
 const express = require('express');
 const webServerConfig = require('../config/web-server');
+const router = require('./router');
 
 let httpServer;
 
@@ -11,14 +11,7 @@ function initialize(){
         const app = express();
         httpServer = http.createServer(app);
         app.use(morgan('dev'));
-
-        app.use('/', async (request, response) =>{
-            const result = await database.ejecutarQuery('SELECT registro "registro", nombre "nombre", fotografia "fotografia", correo "correo", telefono "telefono", password "password", estado "estado" FROM usuario');
-        
-            response.status(200).json(result);
-        });
-        
-
+        app.use('/comunity-usac/api/', router);
         httpServer.listen(webServerConfig.port)
             .on('listening', () =>{
                 console.log(`Servidor iniciado, escuchando en el puerto ${webServerConfig.port}`);

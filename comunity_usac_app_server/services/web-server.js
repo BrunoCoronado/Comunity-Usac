@@ -1,4 +1,5 @@
 const http = require('http');
+const database = require('./database');
 const morgan = require('morgan');
 const express = require('express');
 const webServerConfig = require('../config/web-server');
@@ -11,8 +12,10 @@ function initialize(){
         httpServer = http.createServer(app);
         app.use(morgan('dev'));
 
-        app.use('/', (request, response) =>{
-            response.end('Hola Mundo');
+        app.use('/', async (request, response) =>{
+            const result = await database.ejecutarQuery('SELECT registro "registro", nombre "nombre", fotografia "fotografia", correo "correo", telefono "telefono", password "password", estado "estado" FROM usuario');
+        
+            response.status(200).json(result);
         });
         
 

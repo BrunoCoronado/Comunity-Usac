@@ -1,7 +1,9 @@
 const webServer = require('./services/web-server');
+const database = require('./services/database');
 
 async function iniciar(){
     try {
+        await database.initialize();
         await webServer.initialize();
     } catch (error) {
         console.log(error);
@@ -15,6 +17,7 @@ async function apagar(e){
     let err = e;
     try {
         await webServer.close();
+        await database.close();
     } catch (error) {
         console.error(error);
         err = err || error;

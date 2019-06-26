@@ -1,4 +1,5 @@
 const http = require('http');
+const morgan = require('morgan');
 const express = require('express');
 const webServerConfig = require('../config/web-server');
 
@@ -8,6 +9,7 @@ function initialize(){
     return new Promise((resolve, reject) =>{
         const app = express();
         httpServer = http.createServer(app);
+        app.use(morgan('dev'));
 
         app.use('/', (request, response) =>{
             response.end('Hola Mundo');

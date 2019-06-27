@@ -1,6 +1,7 @@
 const http = require('http');
 const morgan = require('morgan');
 const express = require('express');
+const bodyParser = require('body-parser');
 const webServerConfig = require('../config/web-server');
 const router = require('./router');
 
@@ -10,6 +11,8 @@ function initialize(){
     return new Promise((resolve, reject) =>{
         const app = express();
         httpServer = http.createServer(app);
+        app.use(bodyParser.urlencoded({ extended: true }))
+        app.use(bodyParser.json());
         app.use(morgan('dev'));
         app.use('/comunity-usac/api/', router);
         httpServer.listen(webServerConfig.port)

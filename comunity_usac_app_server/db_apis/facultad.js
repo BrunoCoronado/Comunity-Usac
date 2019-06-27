@@ -1,11 +1,10 @@
-const oracledb = require('oracledb');
 const database = require('../services/database');
 
-async function buscar(context){
+async function buscar(fac){
     let query = `SELECT codigo_facultad "codigo", nombre "nombre", descripcion "descripcion" FROM facultad WHERE estado = 0`;
     const binds = {};
-    if(context.codigo_facultad){
-        binds.codigo_facultad = context.codigo_facultad;
+    if(fac.codigo_facultad){
+        binds.codigo_facultad = fac.codigo_facultad;
         query += ` AND codigo_facultad = :codigo_facultad`
     }    
     const result = await database.ejecutarQuery(query, binds);
@@ -20,7 +19,7 @@ async function crear(fac){
 }
 
 async function actualizar(fac){
-    let query = `BEGIN \nactualizar_facultad(:codigo_facultad, :nombre, :descripcion, :estado); \nEND;`
+    let query = `BEGIN \nactualizar_facultad(:codigo_facultad, :nombre, :descripcion); \nEND;`
     const facultad = Object.assign({}, fac);
     const result = await database.ejecutarQuery(query, facultad);
     return result;

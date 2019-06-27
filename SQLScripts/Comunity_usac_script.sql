@@ -122,6 +122,22 @@ DROP VIEW listar_facultades;
 
 SELECT * FROM listar_facultades;
 
+CREATE OR REPLACE PROCEDURE Listar_Facultades
+IS 
+    BEGIN
+        SELECT codigo_facultad "codigo", nombre "nombre", descripcion "descripcion" FROM facultad WHERE estado = 0;
+    END;
+
+DROP PROCEDURE listar_facultades;
+
+CREATE OR REPLACE PROCEDURE Obtener_Facultad (codigo_f IN NUMERIC) 
+IS  
+    BEGIN
+        SELECT codigo_facultad "codigo", nombre "nombre", descripcion "descripcion" FROM facultad WHERE estado = 0 AND codigo_facultad = codigo_f;
+    END;
+    
+DROP PROCEDURE obtener_facultad;    
+
 CREATE OR REPLACE PROCEDURE Insertar_Facultad (codigo_f IN NUMERIC, nombre_f IN VARCHAR2, descripcion_f IN VARCHAR2)
 IS
     BEGIN
@@ -133,10 +149,10 @@ BEGIN
     COMMIT;
 END;
 
-CREATE OR REPLACE PROCEDURE Actualizar_Facultad (codigo_f IN NUMERIC, nombre_f IN VARCHAR2, descripcion_f IN VARCHAR2, estado_f IN NUMERIC)
+CREATE OR REPLACE PROCEDURE Actualizar_Facultad (codigo_f IN NUMERIC, nombre_f IN VARCHAR2, descripcion_f IN VARCHAR2)
 IS
     BEGIN
-        UPDATE facultad SET nombre = nombre_f, descripcion = descripcion_f, estado = estado_f WHERE codigo_facultad = codigo_f;
+        UPDATE facultad SET nombre = nombre_f, descripcion = descripcion_f WHERE codigo_facultad = codigo_f;
     END;
     
 BEGIN
@@ -177,8 +193,35 @@ INSERT INTO rol(nombre, estado) VALUES('Estudiante', 0);
 INSERT INTO rol(nombre, estado) VALUES('Catedratico', 0);
 INSERT INTO rol(nombre, estado) VALUES('Auxiliar', 0);
 INSERT INTO rol(nombre, estado) VALUES('Junta Directiva', 0);
+COMMIT;
 
-SELECT * FROM rol;
+TRUNCATE TABLE rol;
+
+SELECT * FROM rol; 
+
+CREATE OR REPLACE PROCEDURE Insertar_Rol (nombre_r IN VARCHAR2, descripcion_r IN VARCHAR2)    
+IS 
+    BEGIN
+        INSERT INTO rol(nombre, descripcion, estado) VALUES(nombre_r, descripcion_r, 0);
+    END;
+    
+BEGIN
+    insertar_rol('Conserje', 'Mantenimiento USAC');
+    COMMIT;
+END;
+    
+CREATE OR REPLACE PROCEDURE Actualizar_Rol (codigo_r IN NUMERIC, nombre_r IN VARCHAR2, descripcion_r IN VARCHAR2)
+IS 
+    BEGIN
+        UPDATE rol SET nombre = nombre_r, descripcion = descripcion_r WHERE codigo_rol = codigo_r;
+    END;
+
+CREATE OR REPLACE PROCEDURE Eliminar_Rol (codigo_r IN NUMERIC)
+IS 
+    BEGIN
+        UPDATE rol SET estado = 1  WHERE codigo_rol = codigo_r;
+    END;
+
 
 INSERT INTO usuario(nombre, fotografia, correo, telefono, password, estado) VALUES('Bruno Coronado', './profile.png', 'bcoronado.morales@gmail.com',51107613, '23111997', 0);
 INSERT INTO usuario(nombre, fotografia, correo, telefono, password, estado) VALUES('Luis Coronado', './profile.png', 'luisCor@gmail.com',52669476, '52669476', 0);

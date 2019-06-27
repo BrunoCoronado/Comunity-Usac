@@ -26,7 +26,7 @@ async function post(request, response, next){
         if(!result.error)
             response.status(201).end(`Facultad ${fac.nombre} creada.` );
         else
-            response.status(404).end();
+            response.status(400).end();
     } catch (error) {
         next(error);
     }
@@ -36,12 +36,11 @@ async function post(request, response, next){
 async function put(request, response, next){
     try {
         let fac = capturarFacultadRequest(request);
-        fac.estado = 0;
         const result = await facultad.actualizar(fac);
         if(!result.error)
-            response.status(200).end(`Facultad ${fac.nombre} modificada.` );
+            response.status(202).end(`Facultad ${fac.nombre} modificada.` );
         else
-            response.status(201).end();
+            response.status(400).end();
     } catch (error) {
         next(error);
     }
@@ -54,9 +53,9 @@ async function del(request, response, next){
         }
         const result = await facultad.eliminar(fac);
         if(!result.error)
-            response.status(200).end(`Facultad eliminada.` );
+            response.status(202).end(`Facultad eliminada.` );
         else
-            response.status(201).end(result.error);
+            response.status(400).end(result.error);
     } catch (error) {
         next(error);
     }

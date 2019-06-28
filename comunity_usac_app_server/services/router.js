@@ -3,6 +3,7 @@ const router = new express.Router();
 const facultad = require('../controllers/facultad');
 const rol = require('../controllers/rol');
 const carrera = require('../controllers/carrera');
+const ciencia = require('../controllers/ciencia');
 
 router.route('/facultad/:codigo?')
     .get(facultad.get)
@@ -21,5 +22,11 @@ router.route('/carrera/:codigo?')
     .post(carrera.post)
     .put(carrera.put)
     .delete(carrera.delete);
+
+router.route('/ciencia/:codigo?')
+    .get(ciencia.get)
+    .post(ciencia.post)
+    .put(ciencia.put)
+    .delete(ciencia.delete);
 
 module.exports = router;

@@ -31,7 +31,7 @@ async function eliminar(car){
     if(carrera.codigo_carrera)
         return await database.ejecutarQuery(query, carrera);
     return {
-        erro: "sin codigo"
+        error: "sin codigo"
     }
 }
 

@@ -34,9 +34,8 @@ CREATE TABLE ciencia(
     codigo_ciencia NUMERIC NOT NULL,
     nombre VARCHAR2(75) NOT NULL,
     descripcion VARCHAR2(200) NULL,
-    codigo_carrera NUMERIC NOT NULL,
-    CONSTRAINT ciencia_pk PRIMARY KEY(codigo_ciencia),
-    CONSTRAINT carrera_fk FOREIGN KEY(codigo_carrera) REFERENCES carrera(codigo_carrera)
+    estado NUMERIC NOT NULL,
+    CONSTRAINT ciencia_pk PRIMARY KEY(codigo_ciencia)
 );
 
 CREATE TABLE rol(
@@ -92,6 +91,7 @@ CREATE TABLE usuario_ciencia(
 
 DROP TABLE facultad;
 DROP TABLE carrera;
+DROP TABLE ciencia;
 DROP TABLE rol;
 DROP TABLE usuario;
 DROP TABLE usuario_rol;
@@ -171,22 +171,86 @@ BEGIN
     COMMIT;
 END;
 
-INSERT INTO carrera(codigo_facultad, nombre, estado) VALUES (1, 'Ciencias y Sistemas', 0);
-INSERT INTO carrera(codigo_facultad, nombre, estado) VALUES (1, 'Mecanica', 0);
-INSERT INTO carrera(codigo_facultad, nombre, estado) VALUES (1, 'Quimica', 0);
-INSERT INTO carrera(codigo_facultad, nombre, estado) VALUES (1, 'Industrial', 0);
-INSERT INTO carrera(codigo_facultad, nombre, estado) VALUES (2, 'Fisioterapia', 0);
-INSERT INTO carrera(codigo_facultad, nombre, estado) VALUES (2, 'Terapia Respiratoria', 0);
-INSERT INTO carrera(codigo_facultad, nombre, estado) VALUES (2, 'Enfermeria', 0);
-INSERT INTO carrera(codigo_facultad, nombre, estado) VALUES (2, 'Medico y Cirujano', 0);
-INSERT INTO carrera(codigo_facultad, nombre, estado) VALUES (3, 'Cirujano Dentista', 0);
-INSERT INTO carrera(codigo_facultad, nombre, estado) VALUES (4, 'Gestion Ambiental', 0);
-INSERT INTO carrera(codigo_facultad, nombre, estado) VALUES (4, 'Industrias Agropecuarias y Forestales', 0);
-INSERT INTO carrera(codigo_facultad, nombre, estado) VALUES (5, 'Arquitectura', 0);
-INSERT INTO carrera(codigo_facultad, nombre, estado) VALUES (5, 'Disenio Grafico', 0);
-INSERT INTO carrera(codigo_facultad, nombre, estado) VALUES (6, 'Ciencias Juridicas y Sociales, Abogacia y Notariado', 0);
+INSERT INTO carrera(codigo_carrera, codigo_facultad, nombre, estado) VALUES (1, 1, 'Ciencias y Sistemas', 0);
+INSERT INTO carrera(codigo_carrera, codigo_facultad, nombre, estado) VALUES (2, 1, 'Mecanica', 0);
+INSERT INTO carrera(codigo_carrera, codigo_facultad, nombre, estado) VALUES (3, 1, 'Quimica', 0);
+INSERT INTO carrera(codigo_carrera, codigo_facultad, nombre, estado) VALUES (4, 1, 'Industrial', 0);
+INSERT INTO carrera(codigo_carrera, codigo_facultad, nombre, estado) VALUES (5, 2, 'Fisioterapia', 0);
+INSERT INTO carrera(codigo_carrera, codigo_facultad, nombre, estado) VALUES (6, 2, 'Terapia Respiratoria', 0);
+INSERT INTO carrera(codigo_carrera, codigo_facultad, nombre, estado) VALUES (7, 2, 'Enfermeria', 0);
+INSERT INTO carrera(codigo_carrera, codigo_facultad, nombre, estado) VALUES (8, 2, 'Medico y Cirujano', 0);
+INSERT INTO carrera(codigo_carrera, codigo_facultad, nombre, estado) VALUES (9, 3, 'Cirujano Dentista', 0);
+INSERT INTO carrera(codigo_carrera, codigo_facultad, nombre, estado) VALUES (10, 4, 'Gestion Ambiental', 0);
+INSERT INTO carrera(codigo_carrera, codigo_facultad, nombre, estado) VALUES (11, 4, 'Industrias Agropecuarias y Forestales', 0);
+INSERT INTO carrera(codigo_carrera, codigo_facultad, nombre, estado) VALUES (12, 5, 'Arquitectura', 0);
+INSERT INTO carrera(codigo_carrera, codigo_facultad, nombre, estado) VALUES (13, 5, 'Disenio Grafico', 0);
+INSERT INTO carrera(codigo_carrera, codigo_facultad, nombre, estado) VALUES (14, 6, 'Ciencias Juridicas y Sociales, Abogacia y Notariado', 0);
 
 SELECT * FROM carrera;
+
+SELECT c.codigo_carrera "codigo", c.nombre "nombre", c.descripcion "descripcion", f.nombre "facultad" 
+FROM carrera c 
+INNER JOIN facultad f ON c.codigo_facultad = f.codigo_facultad
+AND c.estado = 0;
+
+
+
+CREATE OR REPLACE PROCEDURE  Insertar_Carrera(cod_c IN NUMERIC, cod_f IN NUMERIC, nombre_c IN VARCHAR2, descripcion_c IN VARCHAR2)
+IS
+    BEGIN
+        INSERT INTO carrera(codigo_carrera, codigo_facultad, nombre, descripcion, estado) VALUES(cod_c, cod_f, nombre_c, descripcion_c, 0);
+    END;
+
+CREATE OR REPLACE PROCEDURE Actualizar_Carrera(cod_c IN NUMERIC, cod_f IN NUMERIC, nombre_c IN VARCHAR2, descripcion_c IN VARCHAR2)
+IS
+    BEGIN 
+        UPDATE carrera SET codigo_facultad = cod_f, nombre = nombre_c, descripcion = descripcion_c WHERE codigo_carrera = cod_c;
+    END;
+
+CREATE OR REPLACE PROCEDURE Eliminar_Carrera(cod_c IN NUMERIC)
+IS
+    BEGIN
+        UPDATE carrera SET estado = 1 WHERE codigo_carrera = cod_c;
+    END;
+    
+
+INSERT INTO ciencia(codigo_ciencia, nombre, estado) VALUES(1, 'Estructuras de Datos', 0); 
+INSERT INTO ciencia(codigo_ciencia, nombre, estado) VALUES(2, 'Matematica Basica 1', 0); 
+INSERT INTO ciencia(codigo_ciencia, nombre, estado) VALUES(3, 'Manejo E Implementacion de Archivos', 0); 
+INSERT INTO ciencia(codigo_ciencia, nombre, estado) VALUES(4, 'Organizacion Computacional', 0); 
+INSERT INTO ciencia(codigo_ciencia, nombre, estado) VALUES(5, 'Teoria de Sistemas 1', 0); 
+INSERT INTO ciencia(codigo_ciencia, nombre, estado) VALUES(6, 'Introduccion al Derecho 1', 0); 
+INSERT INTO ciencia(codigo_ciencia, nombre, estado) VALUES(7, 'Quimica Oraganica 1', 0); 
+INSERT INTO ciencia(codigo_ciencia, nombre, estado) VALUES(8, 'Teoria Social 1', 0); 
+COMMIT;
+SELECT * FROM ciencia;
+
+SELECT codigo_ciencia "codigo", nombre "nombre", descripcion "descripcion" FROM ciencia WHERE estado = 0;
+
+SELECT codigo_ciencia "codigo", nombre "nombre", descripcion "descripcion"
+FROM ciencia
+WHERE estado = 0
+AND codigo_ciencia = 1;
+
+CREATE OR REPLACE PROCEDURE Insertar_Ciencia(cod_c IN NUMERIC, nombre_c IN VARCHAR2, descripcion_c IN VARCHAR2)
+IS 
+    BEGIN
+        INSERT INTO ciencia(codigo_ciencia, nombre, descripcion, estado) VALUES (cod_c, nombre_c, descripcion_c, 0);
+    END;
+    
+CREATE OR REPLACE PROCEDURE Actualizar_Ciencia(cod_c IN NUMERIC, nombre_c IN VARCHAR2, descripcion_c IN VARCHAR2)
+IS 
+    BEGIN
+        UPDATE ciencia SET nombre = nombre_c, descripcion = descripcion_c WHERE codigo_ciencia = cod_c;
+    END;
+    
+CREATE OR REPLACE PROCEDURE Eliminar_Ciencia(cod_c IN NUMERIC)
+IS 
+    BEGIN
+        UPDATE ciencia SET estado = 1 WHERE codigo_ciencia = cod_c;
+    END;
+    
+
 
 INSERT INTO rol(nombre, estado) VALUES('Administrador', 0);
 INSERT INTO rol(nombre, estado) VALUES('Estudiante', 0);

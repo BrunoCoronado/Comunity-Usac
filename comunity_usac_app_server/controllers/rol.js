@@ -3,14 +3,14 @@ const rol = require('../db_apis/rol');
 async function get(request, response, next){
     try {
         const r = {
-            codigo_rol: parseInt(request.codigo_rol, 10)
+            codigo_rol: parseInt(request.params.codigo, 10)
         }
         const rows = await rol.buscar(r);
-        if(request.params.codigo_rol){
+        if(request.params.codigo){
             if(rows.length === 1){
                 response.status(200).json(rows[0]);
             }else{
-                response.status(404).end();
+                response.status(404).end(`No encontrado.`);
             }
         }else{
            response.status(200).json(rows);

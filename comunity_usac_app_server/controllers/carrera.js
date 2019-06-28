@@ -1,10 +1,11 @@
-const facultad = require('../db_apis/facultad');
+const carrera = require('../db_apis/carrera');
 
 async function get(request, response, next){
     try {
-        const context = {};
-        context.codigo_facultad = parseInt(request.params.codigo, 10);
-        const rows = await facultad.buscar(context);
+        const car = {
+            codigo_carrera: parseInt(request.params.codigo, 10)
+        };
+        const rows = await carrera.buscar(car);
         if(request.params.codigo){
             if(rows.length === 1){
                 response.status(200).json(rows[0]);
@@ -21,24 +22,23 @@ async function get(request, response, next){
 
 async function post(request, response, next){
     try {
-        let fac = capturarFacultadRequest(request);    
-        const result = await facultad.crear(fac);
+        let car = capturarCarreraRequest(request);
+        const result = await carrera.crear(car);
         if(!result.error)
-            response.status(201).end(`Facultad ${fac.nombre} creada.` );
+            response.status(201).end(`Carrera ${car.nombre} creada.`);
         else
             response.status(400).end();
     } catch (error) {
         next(error);
     }
-    
 }
 
 async function put(request, response, next){
     try {
-        let fac = capturarFacultadRequest(request);
-        const result = await facultad.actualizar(fac);
+        let car = capturarCarreraRequest(request);
+        const result = await carrera.actualizar(car);
         if(!result.error)
-            response.status(202).end(`Facultad ${fac.nombre} modificada.` );
+            response.status(202).end(`Carrera ${car.nombre} modificada.`);
         else
             response.status(400).end();
     } catch (error) {
@@ -48,24 +48,25 @@ async function put(request, response, next){
 
 async function del(request, response, next){
     try {
-        const fac = {
-            codigo_facultad: parseInt(request.params.codigo, 10)
+        const car = {
+            codigo_carrera: parseInt(request.params.codigo, 10)
         }
-        const result = await facultad.eliminar(fac);
+        const result = await carrera.eliminar(car);
         if(!result.error)
-            response.status(202).end(`Facultad eliminada.` );
+            response.status(202).end(`Carrera eliminada.`);
         else
-            response.status(400).end(result.error);
+            response.status(400).end();
     } catch (error) {
         next(error);
     }
 }
 
-function capturarFacultadRequest(request){
+function capturarCarreraRequest(request){
     return {
+        codigo_carrera: request.body.codigo_carrera,
         codigo_facultad: request.body.codigo_facultad,
         nombre: request.body.nombre,
-        descripcion: request.body.descripcion,
+        descripcion: request.body.descripcion
     };
 }
 

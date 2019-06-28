@@ -15,7 +15,7 @@ DROP TRIGGER rol_registro_trg;
 CREATE TABLE facultad (
     codigo_facultad NUMERIC NOT NULL,
     nombre VARCHAR2(75) NOT NULL,
-    descripcion VARCHAR(200) NULL,
+    descripcion VARCHAR2(200) NULL,
     estado NUMERIC NOT NULL,
     CONSTRAINT facultad_pk PRIMARY KEY(codigo_facultad)
 );

@@ -1,7 +1,7 @@
 const database = require('../services/database');
 
 async function buscar(r){
-    let query = `SELECT nombre "nombre", descripcion "descripcion" FROM rol WHERE estado = 0`;
+    let query = `SELECT codigo_rol "codigo", nombre "nombre", descripcion "descripcion" FROM rol WHERE estado = 0`;
     const rol = {};
     if(r.codigo_rol){
         rol.codigo_rol = r.codigo_rol;

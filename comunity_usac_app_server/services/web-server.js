@@ -10,6 +10,11 @@ let httpServer;
 function initialize(){
     return new Promise((resolve, reject) =>{
         const app = express();
+        app.use(function(req, res, next) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            next();
+        });
         httpServer = http.createServer(app);
         app.use(bodyParser.urlencoded({ extended: true }))
         app.use(bodyParser.json());

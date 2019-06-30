@@ -1,0 +1,21 @@
+<br>
+<h1 class="panel-title-style text-center display-3">Facultades</h1>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-sm-12" *ngFor = 'let facultad of facultades$'>
+            <div class="card">
+                <img class="card-img-top image-panel-facultad" src="../../assets/system/usaclogo.png" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">{{ facultad.nombre }}</h5>
+                    <p class="card-text">{{ facultad.descripcion }}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><a class="btn btn-warning btn-block">Actualizar</a></li>
+                    <li class="list-group-item"><a class="btn btn-danger btn-block">Eliminar</a></li>
+                </ul>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>

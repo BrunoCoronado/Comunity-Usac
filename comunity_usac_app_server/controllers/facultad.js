@@ -9,7 +9,7 @@ async function get(request, response, next){
             if(rows.length === 1){
                 response.status(200).json(rows[0]);
             }else{
-                response.status(404).end(`No encontrado.`);
+                response.status(404).end();
             }
         }else{
             response.status(200).json(rows);
@@ -24,7 +24,7 @@ async function post(request, response, next){
         let fac = capturarFacultadRequest(request);    
         const result = await facultad.crear(fac);
         if(!result.error)
-            response.status(201).end(`Facultad ${fac.nombre} creada.` );
+            response.status(201).end();
         else
             response.status(400).end();
     } catch (error) {
@@ -38,7 +38,7 @@ async function put(request, response, next){
         let fac = capturarFacultadRequest(request);
         const result = await facultad.actualizar(fac);
         if(!result.error)
-            response.status(202).end(`Facultad ${fac.nombre} modificada.` );
+            response.status(202).end();
         else
             response.status(400).end();
     } catch (error) {
@@ -52,10 +52,10 @@ async function del(request, response, next){
             codigo_facultad: parseInt(request.params.codigo, 10)
         }
         const result = await facultad.eliminar(fac);
-        if(!result.error)
-            response.status(202).end(`Facultad eliminada.` );
-        else
-            response.status(400).end(result.error);
+        if(!result.error){
+            response.status(202).end();
+        }else
+            response.status(400).end();
     } catch (error) {
         next(error);
     }

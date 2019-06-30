@@ -12,9 +12,18 @@ export class AdministracionFacultadComponent implements OnInit {
   constructor(private data: DataService) { }
 
   ngOnInit() {
+    this.obtenerFacultades();
+  }
+
+  obtenerFacultades(){
     this.data.getFacultades().subscribe( data =>{
       this.facultades$ = data;
-      console.log(this.facultades$);
+    });
+  }
+
+  eliminarFacultad(codigo){
+    this.data.deleteFacultad(codigo).subscribe( data => {
+      this.obtenerFacultades();
     });
   }
 }

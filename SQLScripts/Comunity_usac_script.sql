@@ -110,7 +110,7 @@ TRUNCATE TABLE facultad;
 SELECT * FROM facultad;
 SELECT codigo_facultad as "codigo", nombre as "nombre", descripcion as "descripcion" FROM facultad WHERE estado = 0 AND codigo_facultad > 0;
 
-UPDATE facultad SET estado = 1 WHERE codigo_facultad = 4;
+UPDATE facultad SET estado = 0 WHERE codigo_facultad > 0;
 COMMIT;
 
 CREATE OR REPLACE VIEW listar_facultades AS 

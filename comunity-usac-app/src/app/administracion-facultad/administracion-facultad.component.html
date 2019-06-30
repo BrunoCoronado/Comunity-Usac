@@ -1,5 +1,15 @@
 <br>
-<h1 class="panel-title-style text-center display-3">Facultades</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-9 col-sm-12">
+            <h1 class="panel-title-style display-3">Facultades</h1>
+        </div>
+        <div class="col-md-3 col-sm-12">
+            <br>
+            <a class="btn btn-primary btn-block" href="/actualizar-facultad/-1" >Crear Facultad</a>
+        </div>
+    </div>
+</div>
 <br>
 <div class="container">
     <div class="row">
@@ -11,8 +21,8 @@
                     <p class="card-text">{{ facultad.descripcion }}</p>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><a class="btn btn-warning btn-block">Actualizar</a></li>
-                    <li class="list-group-item"><a class="btn btn-danger btn-block">Eliminar</a></li>
+                    <li class="list-group-item"><a class="btn btn-success btn-block" href="/actualizar-facultad/{{ facultad.codigo }}">Actualizar</a></li>
+                    <li class="list-group-item"><a class="btn btn-warning btn-block" (click)="eliminarFacultad(facultad.codigo)" >Eliminar</a></li>
                 </ul>
             </div>
             <br>

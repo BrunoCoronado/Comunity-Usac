@@ -1,0 +1,19 @@
+<br>
+<div class="container">
+    <h1 class="panel-title-style text-center display-4">{{ accion }} Facultad</h1>
+    <div class="col-sm-12 col-md-12">
+        <div [hidden]="!crear" class="form-group">
+            <label for="exampleInputEmail1">Código</label>
+            <input #fcodigo required type="number" class="form-control" id="exampleInputEmail1" placeholder="Código" value="{{ facultad$.codigo }}">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Nombre</label>
+            <input #fnombre required type="text" class="form-control" id="exampleInputEmail1" placeholder="Nombre" value="{{ facultad$.nombre }}">
+        </div> 
+        <div class="form-group">
+            <label for="exampleInputEmail1">Descripción</label>
+            <input #fdescripcion required type="text" class="form-control" id="exampleInputEmail1" placeholder="Descripción" value="{{ facultad$.descripcion }}">
+        </div> 
+    </div>
+    <a type="submit" class="btn btn-primary btn-block" (click)="guardarCambios(fcodigo.value, fnombre.value, fdescripcion.value)">{{ accion }} Facultad</a>
+</div>

@@ -1,6 +1,7 @@
 const http = require('http');
 const morgan = require('morgan');
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const webServerConfig = require('../config/web-server');
 const router = require('./router');
@@ -10,7 +11,8 @@ let httpServer;
 function initialize(){
     return new Promise((resolve, reject) =>{
         const app = express();
-        app.use(function(req, res, next) {
+        app.options('*', cors())
+        app.use( (req, res, next) => {
             res.header("Access-Control-Allow-Origin", "*");
             res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             next();

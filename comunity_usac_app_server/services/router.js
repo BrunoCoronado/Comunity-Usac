@@ -9,7 +9,7 @@ router.route('/facultad/:codigo?')
     .get(facultad.get)
     .post(facultad.post)
     .put(facultad.put)
-    .delete(facultad.delete);
+    .delete(facultad.delete)
 
 router.route('/rol/:codigo?')
     .get(rol.get)

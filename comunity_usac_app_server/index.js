@@ -1,5 +1,10 @@
 const webServer = require('./services/web-server');
 const database = require('./services/database');
+const dbConfig = require('./config/database.js');
+
+const defaultThreadPoolSize = 4;
+ 
+process.env.UV_THREADPOOL_SIZE = dbConfig.comunity_usac_pool.poolMax + defaultThreadPoolSize;
 
 async function iniciar(){
     try {

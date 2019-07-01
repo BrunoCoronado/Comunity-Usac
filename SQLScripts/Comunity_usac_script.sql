@@ -112,6 +112,10 @@ SELECT codigo_facultad as "codigo", nombre as "nombre", descripcion as "descripc
 
 UPDATE facultad SET estado = 0 WHERE codigo_facultad > 0;
 COMMIT;
+DELETE facultad WHERE codigo_facultad > 6;
+UPDATE facultad SET descripcion = 'Excepteur amet sit adipisicing eu aliqua aliqua sint culpa. Labore id anim cillum in magna dolor amet pariatur. Tempor mollit aliquip laborum velit consectetur elit.
+Excepteur amet sit adipisicing eu ' WHERE codigo_facultad > 0;
+COMMIT;
 
 CREATE OR REPLACE VIEW listar_facultades AS 
     SELECT codigo_facultad as "codigo", nombre "nombre", descripcion "descripcion" 
@@ -193,7 +197,9 @@ FROM carrera c
 INNER JOIN facultad f ON c.codigo_facultad = f.codigo_facultad
 AND c.estado = 0;
 
-
+UPDATE carrera SET descripcion = 'Excepteur amet sit adipisicing eu aliqua aliqua sint culpa. Labore id anim cillum in magna dolor amet pariatur. Tempor mollit aliquip laborum velit consectetur elit.
+Excepteur amet sit adipisicing eu ' WHERE codigo_carrera > 0;
+COMMIT;
 
 CREATE OR REPLACE PROCEDURE  Insertar_Carrera(cod_c IN NUMERIC, cod_f IN NUMERIC, nombre_c IN VARCHAR2, descripcion_c IN VARCHAR2)
 IS

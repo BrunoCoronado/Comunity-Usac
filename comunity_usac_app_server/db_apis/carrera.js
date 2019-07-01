@@ -1,7 +1,7 @@
 const database = require('../services/database');
 
 async function buscar(car){
-    let query = `SELECT c.codigo_carrera "codigo", c.nombre "nombre", c.descripcion "descripcion", f.nombre "facultad" FROM carrera c INNER JOIN facultad f ON c.codigo_facultad = f.codigo_facultad  AND c.estado = 0 `;
+    let query = `SELECT c.codigo_carrera "codigo", c.nombre "nombre", c.descripcion "descripcion", f.nombre "facultad", f.codigo_facultad "codigof" FROM carrera c INNER JOIN facultad f ON c.codigo_facultad = f.codigo_facultad  AND c.estado = 0 `;
     const carrera = {};
     if(car.codigo_carrera){
         carrera.codigo_carrera = car.codigo_carrera;

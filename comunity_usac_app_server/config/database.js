@@ -3,7 +3,8 @@ module.exports = {
         user: 'bruno',
         password: '23111997',
         connectString: 'localhost:1521/xe',
-        poolMin: 0,
-        poolMax: 4
+        poolMin: 10,
+        poolMax: 10,
+        poolIncrement: 0
     }
 }

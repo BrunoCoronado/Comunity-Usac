@@ -1,0 +1,20 @@
+<br>
+<div class="container">
+    <h1 class="panel-title-style text-center display-4">{{ accion }} Rol</h1>
+    <br>
+    <div class="col-sm-12 col-md-12">
+        <div [hidden]="true" class="form-group">
+            <label>Código</label>
+            <input #fcodigo type="number" class="form-control" placeholder="Código" value="{{ rol$.codigo }}">
+        </div>
+        <div class="form-group">
+            <label>Nombre</label>
+            <input #fnombre type="text" class="form-control" placeholder="Nombre" value="{{ rol$.nombre }}">
+        </div> 
+        <div class="form-group">
+            <label>Descripción</label>
+            <input #fdescripcion type="text" class="form-control" placeholder="Descripción" value="{{ rol$.descripcion }}">
+        </div> 
+    </div>
+    <button type="submit" class="btn btn-primary btn-block" (click)='guardarCambios(fnombre.value, fdescripcion.value, fcodigo.value)'>{{ accion }} Rol</button>
+</div>

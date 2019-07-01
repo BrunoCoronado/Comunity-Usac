@@ -10,7 +10,7 @@ async function get(request, response, next){
             if(rows.length === 1){
                 response.status(200).json(rows[0]);
             }else{
-                response.status(404).end(`No encontrado.`);
+                response.status(404).end();
             }
         }else{
             response.status(200).json(rows);
@@ -25,7 +25,7 @@ async function post(request, response, next){
         let car = capturarCarreraRequest(request);
         const result = await carrera.crear(car);
         if(!result.error)
-            response.status(201).end(`Carrera ${car.nombre} creada.`);
+            response.status(201).end();
         else
             response.status(400).end();
     } catch (error) {
@@ -38,7 +38,7 @@ async function put(request, response, next){
         let car = capturarCarreraRequest(request);
         const result = await carrera.actualizar(car);
         if(!result.error)
-            response.status(202).end(`Carrera ${car.nombre} modificada.`);
+            response.status(202).end();
         else
             response.status(400).end();
     } catch (error) {
@@ -53,7 +53,7 @@ async function del(request, response, next){
         }
         const result = await carrera.eliminar(car);
         if(!result.error)
-            response.status(202).end(`Carrera eliminada.`);
+            response.status(202).end();
         else
             response.status(400).end();
     } catch (error) {

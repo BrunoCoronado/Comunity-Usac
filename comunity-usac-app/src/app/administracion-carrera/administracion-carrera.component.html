@@ -1,0 +1,41 @@
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-9 col-sm-12">
+            <h1 class="panel-title-style display-3">Carreras</h1>
+        </div>
+        <div class="col-md-3 col-sm-12">
+            <br>
+            <a class="btn btn-primary btn-block" href="/formulario-carrera/-1" >Crear Carrera</a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="container" *ngFor = 'let facultad of facultades$'>
+    <h1 class="panel-title-style display-4">{{ facultad }}</h1>
+    <br>
+    <div class="row">
+            <div class="col-md-12 col-sm-12" *ngFor = 'let carrera of carreras$'>
+                <div class="card border-primary text-center" *ngIf = 'facultad === carrera.facultad'>
+                    <div class="card-header border-primary">
+                        <b>{{ carrera.nombre }}</b>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ carrera.descripcion }}</p>
+                    </div>
+                    <div class="card-footer border-primary text-muted">
+                        <div class="row">
+                            <div class="col-md-6"> 
+                                <a class="btn btn-success btn-block" href="/formulario-carrera/{{ carrera.codigo }}">Actualizar</a>
+                                <br>
+                            </div>
+                            <div class="col-md-6"> 
+                                <button class="btn btn-warning btn-block" (click)="eliminarCarrera(carrera.codigo)">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br *ngIf = 'facultad === carrera.facultad'>
+        </div>
+    </div>
+</div>

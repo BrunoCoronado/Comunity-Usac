@@ -19,6 +19,7 @@ export class ActualizarFacultadComponent implements OnInit {
   ngOnInit() {
     if(this.facultad$ == -1){
       this.accion = 'Crear';
+      this.crear = true;
     }else{
       this.crear = false;
       this.accion = 'Actualizar';
@@ -29,19 +30,19 @@ export class ActualizarFacultadComponent implements OnInit {
   }
 
   guardarCambios(codigo, nombre, descripcion){
-    const facultad = {
-      codigo_facultad: codigo,
-      nombre: nombre,
-      descripcion: descripcion
+      const facultad = {
+        codigo_facultad: codigo,
+        nombre: nombre,
+        descripcion: descripcion
+      }
+      if(this.crear){
+        this.data.postFacultad(facultad).subscribe( data =>{
+          this.router.navigate(['/administracion-facultad']);
+        });
+      }else{
+        this.data.putFacultad(facultad).subscribe( data =>{
+          this.router.navigate(['/administracion-facultad']);
+        });
+      }
     }
-    if(this.crear){
-      this.data.postFacultad(facultad).subscribe( data =>{
-        this.router.navigate(['/administracion-facultad']);
-      });
-    }else{
-      this.data.putFacultad(facultad).subscribe( data =>{
-        this.router.navigate(['/administracion-facultad']);
-      });
-    }
-  }
 }

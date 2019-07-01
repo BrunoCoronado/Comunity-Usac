@@ -1,0 +1,39 @@
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-9 col-sm-12">
+            <h1 class="panel-title-style display-3">Roles</h1>
+        </div>
+        <div class="col-md-3 col-sm-12">
+            <br>
+            <a class="btn btn-primary btn-block" href="/formulario-rol/-1" >Crear Rol</a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-sm-12" *ngFor = 'let rol of roles$'>
+            <div class="card border-primary text-center">
+                <div class="card-header border-primary">
+                    <b>{{ rol.nombre }}</b>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ rol.descripcion }}</p>
+                </div>
+                <div class="card-footer border-primary text-muted">
+                    <div class="row">
+                        <div class="col-md-6"> 
+                            <a class="btn btn-success btn-block" href="/formulario-rol/{{ rol.codigo }}">Actualizar</a>
+                            <br>
+                        </div>
+                        <div class="col-md-6"> 
+                            <button class="btn btn-warning btn-block" (click)='eliminarRol(rol.codigo)'>Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>

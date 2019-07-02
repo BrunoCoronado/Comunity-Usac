@@ -1,11 +1,11 @@
 const database = require('../services/database');
 
 async function buscar(cien){
-    let query = `SELECT codigo_ciencia "codigo", nombre "nombre", descripcion "descripcion" FROM ciencia WHERE estado = 0 `;
+    let query = `SELECT * FROM listar_ciencias`;
     const ciencia = {};
     if(cien.codigo_ciencia){
         ciencia.codigo_ciencia = cien.codigo_ciencia;
-        query += ` AND codigo_ciencia = :codigo_ciencia`;
+        query += ` WHERE codigo_ciencia = :codigo_ciencia`;
     }
     const result = await database.ejecutarQuery(query, ciencia);
     return result.rows;

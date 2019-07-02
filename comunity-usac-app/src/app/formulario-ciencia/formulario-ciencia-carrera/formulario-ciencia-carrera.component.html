@@ -1,0 +1,59 @@
+<br>
+<div class="container">
+    <h6 class="panel-title-style text-center display-5">Agregar Carreras a <i>{{ ciencia$.nombre }}</i></h6>
+    <br>
+    <div class="row">
+        <div class="col-md-4 col-sm-6">
+            <div class="form-group">
+                <label>Facultad</label>
+                <select #fcodigof class="form-control" (change)="updateCarreras($event.target.value)">
+                    <ng-container *ngFor = 'let facultad of facultades$'>
+                            <option value="{{ facultad.codigo }}">{{ facultad.nombre }}</option>
+                    </ng-container>
+                </select>
+            </div> 
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <div class="form-group">
+                <label>Carrera</label>
+                <select #fcodigc class="form-control">
+                    <ng-container *ngFor = 'let carrera of carrerasSelect$'>
+                        <option value="{{ carrera.codigo }}">{{ carrera.nombre }}</option>
+                    </ng-container>
+                </select>
+            </div> 
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <br>
+            <button type="submit" class="btn btn-secondary btn-block" (click) = 'agregarCiencia(fcodigc.value)'>Agregar Carrera</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <br>
+            <button type="submit" class="btn btn-primary btn-block">Finalizar</button>
+            <br>
+        </div>
+    </div>
+    <h1 class="panel-title-style display-5">Carreras</h1>
+    <p class="text-muted">Carreras a las que pertenece la ciencia</p>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr class="bg-secondary">
+                    <th class="text-light" scope="col">Facultad</th>
+                    <th class="text-light" scope="col">Carrera</th>
+                    <th class="text-light" scope="col">Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor = 'let carrera of ciencia$.carreras'>
+                    <td>{{ carrera.facultad }}</td>
+                    <td>{{ carrera.carrera }}</td>
+                    <td><button type="submit" class="btn btn-warning btn-sm" (click) = 'eliminarCarrera(carrera.codigoc)'>Eliminar</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <br>
+</div>

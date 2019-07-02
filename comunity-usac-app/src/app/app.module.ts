@@ -13,7 +13,10 @@ import { ActualizarFacultadComponent } from './actualizar-facultad/actualizar-fa
 import { AdministracionCarreraComponent } from './administracion-carrera/administracion-carrera.component';
 import { FormularioCarreraComponent } from './formulario-carrera/formulario-carrera.component';
 import { AdministracionRolComponent } from './administracion-rol/administracion-rol.component';
-import { FormularioRolComponent } from './formulario-rol/formulario-rol.component'
+import { FormularioRolComponent } from './formulario-rol/formulario-rol.component';
+import { AdministracionCienciaComponent } from './administracion-ciencia/administracion-ciencia.component';
+import { FormularioCienciaComponent } from './formulario-ciencia/formulario-ciencia.component';
+import { FormularioCienciaCarreraComponent } from './formulario-ciencia/formulario-ciencia-carrera/formulario-ciencia-carrera.component'
 
 @NgModule({
   declarations: [
@@ -25,7 +28,10 @@ import { FormularioRolComponent } from './formulario-rol/formulario-rol.componen
     AdministracionCarreraComponent,
     FormularioCarreraComponent,
     AdministracionRolComponent,
-    FormularioRolComponent
+    FormularioRolComponent,
+    AdministracionCienciaComponent,
+    FormularioCienciaComponent,
+    FormularioCienciaCarreraComponent
   ],
   imports: [
     CommonModule,

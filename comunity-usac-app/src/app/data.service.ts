@@ -52,12 +52,12 @@ export class DataService {
     return this.http.get('http://localhost:3000/comunity-usac/api/rol/');
   }
 
-  getrol(codigo_carrera){
-    return this.http.get('http://localhost:3000/comunity-usac/api/rol/' + codigo_carrera);
+  getRol(codigo_rol){
+    return this.http.get('http://localhost:3000/comunity-usac/api/rol/' + codigo_rol);
   }
 
-  deleteRol(codigo_carrera){
-    return this.http.delete('http://localhost:3000/comunity-usac/api/rol/' + codigo_carrera);
+  deleteRol(codigo_rol){
+    return this.http.delete('http://localhost:3000/comunity-usac/api/rol/' + codigo_rol);
   }
 
   postRol(body){
@@ -66,5 +66,33 @@ export class DataService {
 
   putRol(body){
     return this.http.put('http://localhost:3000/comunity-usac/api/rol/', body);
+  }
+
+  getCiencias(){
+    return this.http.get('http://localhost:3000/comunity-usac/api/ciencia/');
+  }
+
+  getCiencia(codigo_ciencia){
+    return this.http.get('http://localhost:3000/comunity-usac/api/ciencia/' + codigo_ciencia);
+  }
+
+  deleteCiencia(codigo_ciencia){
+    return this.http.delete('http://localhost:3000/comunity-usac/api/ciencia/' + codigo_ciencia);
+  }
+
+  postCiencia(body){
+    return this.http.post('http://localhost:3000/comunity-usac/api/ciencia/', body);
+  }
+
+  putCiencia(body){
+    return this.http.put('http://localhost:3000/comunity-usac/api/ciencia/', body);
+  }
+
+  postCarreraCiencia(body){
+    return this.http.post('http://localhost:3000/comunity-usac/api/ciencia-carrera', body);
+  }
+
+  deleteCarreraCiencia(codigo_carrera, codigo_ciencia){
+    return this.http.delete(`http://localhost:3000/comunity-usac/api/ciencia-carrera/${codigo_carrera}/${codigo_ciencia}`);
   }
 }

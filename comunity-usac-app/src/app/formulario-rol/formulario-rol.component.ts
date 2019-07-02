@@ -21,7 +21,7 @@ export class FormularioRolComponent implements OnInit {
       this.accion = 'Crear';
     }else{
       this.accion = 'Actualizar';
-      this.data.getrol(this.rol$).subscribe( data => this.rol$ = data );
+      this.data.getRol(this.rol$).subscribe( data => this.rol$ = data );
     }
   }
 

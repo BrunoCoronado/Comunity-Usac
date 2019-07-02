@@ -4,6 +4,7 @@ const facultad = require('../controllers/facultad');
 const rol = require('../controllers/rol');
 const carrera = require('../controllers/carrera');
 const ciencia = require('../controllers/ciencia');
+const ciencia_carrera = require('../controllers/ciencia-carrera'); 
 
 router.route('/facultad/:codigo?')
     .get(facultad.get)
@@ -28,5 +29,9 @@ router.route('/ciencia/:codigo?')
     .post(ciencia.post)
     .put(ciencia.put)
     .delete(ciencia.delete);
+
+router.route('/ciencia-carrera/:codigo_carrera?/:codigo_ciencia?')
+    .post(ciencia_carrera.post)
+    .delete(ciencia_carrera.delete);
 
 module.exports = router;

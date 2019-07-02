@@ -38,6 +38,14 @@ CREATE TABLE ciencia(
     CONSTRAINT ciencia_pk PRIMARY KEY(codigo_ciencia)
 );
 
+CREATE TABLE carrera_ciencia(
+    codigo_carrera NUMERIC NOT NULL,
+    codigo_ciencia NUMERIC NOT NULL,
+    CONSTRAINT caci_carrera_fk FOREIGN KEY(codigo_carrera) REFERENCES carrera(codigo_carrera),
+    CONSTRAINT caci_ciencia_fk FOREIGN KEY(codigo_ciencia) REFERENCES ciencia(codigo_ciencia),
+    CONSTRAINT caci_carrera_ciencia_pk PRIMARY KEY(codigo_carrera, codigo_ciencia)
+);
+
 CREATE TABLE rol(
     codigo_rol NUMERIC NOT NULL,
     nombre VARCHAR2(50) NOT NULL,
@@ -197,8 +205,11 @@ FROM carrera c
 INNER JOIN facultad f ON c.codigo_facultad = f.codigo_facultad
 AND c.estado = 0;
 
+UPDATE carrera SET estado = 0 WHERE codigo_carrera > 0;
+COMMIT;
+
 UPDATE carrera SET descripcion = 'Excepteur amet sit adipisicing eu aliqua aliqua sint culpa. Labore id anim cillum in magna dolor amet pariatur. Tempor mollit aliquip laborum velit consectetur elit.
-Excepteur amet sit adipisicing eu ' WHERE codigo_carrera > 0;
+Excepteur amet sit adipisicing eu' WHERE codigo_carrera > 0;
 COMMIT;
 
 CREATE OR REPLACE PROCEDURE  Insertar_Carrera(cod_c IN NUMERIC, cod_f IN NUMERIC, nombre_c IN VARCHAR2, descripcion_c IN VARCHAR2)
@@ -229,7 +240,15 @@ INSERT INTO ciencia(codigo_ciencia, nombre, estado) VALUES(6, 'Introduccion al D
 INSERT INTO ciencia(codigo_ciencia, nombre, estado) VALUES(7, 'Quimica Oraganica 1', 0); 
 INSERT INTO ciencia(codigo_ciencia, nombre, estado) VALUES(8, 'Teoria Social 1', 0); 
 COMMIT;
+
 SELECT * FROM ciencia;
+SELECT * FROM carrera;
+
+UPDATE ciencia SET descripcion = 'Excepteur amet sit adipisicing eu aliqua aliqua sint culpa. Labore id anim cillum in magna dolor amet pariatur. Tempor mollit aliquip laborum velit consectetur elit.
+Excepteur amet sit adipisicing eu' WHERE codigo_ciencia > 0;
+COMMIT;
+UPDATE ciencia SET estado = 0  WHERE codigo_ciencia > 0;
+COMMIT;
 
 SELECT codigo_ciencia "codigo", nombre "nombre", descripcion "descripcion" FROM ciencia WHERE estado = 0;
 
@@ -256,6 +275,38 @@ IS
         UPDATE ciencia SET estado = 1 WHERE codigo_ciencia = cod_c;
     END;
     
+INSERT INTO carrera_ciencia(codigo_carrera, codigo_ciencia) VALUES(1,1);
+INSERT INTO carrera_ciencia(codigo_carrera, codigo_ciencia) VALUES(1,3);
+INSERT INTO carrera_ciencia(codigo_carrera, codigo_ciencia) VALUES(1,4);
+INSERT INTO carrera_ciencia(codigo_carrera, codigo_ciencia) VALUES(1,5);
+INSERT INTO carrera_ciencia(codigo_carrera, codigo_ciencia) VALUES(1,17);
+INSERT INTO carrera_ciencia(codigo_carrera, codigo_ciencia) VALUES(14,6);
+INSERT INTO carrera_ciencia(codigo_carrera, codigo_ciencia) VALUES(3,7);
+INSERT INTO carrera_ciencia(codigo_carrera, codigo_ciencia) VALUES(20,8);
+INSERT INTO carrera_ciencia(codigo_carrera, codigo_ciencia) VALUES(1,2);
+INSERT INTO carrera_ciencia(codigo_carrera, codigo_ciencia) VALUES(2,2);
+INSERT INTO carrera_ciencia(codigo_carrera, codigo_ciencia) VALUES(3,2);
+INSERT INTO carrera_ciencia(codigo_carrera, codigo_ciencia) VALUES(4,2);
+INSERT INTO carrera_ciencia(codigo_carrera, codigo_ciencia) VALUES(29,2);
+COMMIT;
+
+SELECT * FROM carrera_ciencia;
+
+SELECT ci.codigo_ciencia, ci.nombre,ci.descripcion, ca.nombre
+FROM ciencia ci, carrera_ciencia caci, carrera ca
+WHERE ci.codigo_ciencia = caci.codigo_ciencia AND ca.codigo_carrera = caci.codigo_carrera AND ci.estado = 0;
+
+SELECT * FROM listar_ciencias WHERE codigo_ciencia = 2;
+
+SELECT * FROM listar_ciencias;
+
+CREATE OR REPLACE VIEW listar_ciencias AS 
+    SELECT ci.codigo_ciencia, ci.nombre,ci.descripcion, ca.nombre "carrera", fa.nombre "facultad"
+    FROM ciencia ci, carrera_ciencia caci, carrera ca, facultad fa 
+    WHERE ci.codigo_ciencia = caci.codigo_ciencia 
+    AND ca.codigo_carrera = caci.codigo_carrera 
+    AND fa.codigo_facultad = ca.codigo_facultad
+    AND ci.estado = 0
 
 
 INSERT INTO rol(nombre, estado) VALUES('Administrador', 0);
@@ -268,6 +319,12 @@ COMMIT;
 TRUNCATE TABLE rol;
 
 SELECT * FROM rol; 
+
+UPDATE rol SET estado = 0 WHERE codigo_rol > 0;
+COMMIT;
+UPDATE rol SET descripcion = 'Excepteur amet sit adipisicing eu aliqua aliqua sint culpa. Labore id anim cillum in magna dolor amet pariatur. Tempor mollit aliquip laborum velit consectetur elit.
+Excepteur amet sit adipisicing eu ' WHERE codigo_rol > 0;
+COMMIT;
 
 CREATE OR REPLACE PROCEDURE Insertar_Rol (nombre_r IN VARCHAR2, descripcion_r IN VARCHAR2)    
 IS 

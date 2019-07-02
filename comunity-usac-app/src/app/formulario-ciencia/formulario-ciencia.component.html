@@ -1,0 +1,64 @@
+<br>
+<div class="container">
+    <h1 class="panel-title-style text-center display-4">{{ accion }} Ciencia</h1>
+    <br>
+    <div class="col-sm-12 col-md-12">
+        <div [hidden]="accion != 'Crear'" class="form-group">
+            <label>Código</label>
+            <input #fcodigo type="number" class="form-control" placeholder="Código" value="{{ ciencia$.codigo }}">
+        </div>
+        <div class="form-group">
+            <label>Nombre</label>
+            <input #fnombre type="text" class="form-control" placeholder="Nombre" value="{{ ciencia$.nombre }}">
+        </div> 
+        <div class="form-group">
+            <label>Descripción</label>
+            <input #fdescripcion type="text" class="form-control" placeholder="Descripción" value="{{ ciencia$.descripcion }}">
+        </div> 
+    </div>
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <ng-container *ngIf = "accion != 'Crear'; else notUpdateCiencia">
+                    <button type="submit" class="btn btn-primary btn-block" (click)='guardarCambios(false, fcodigo.value, fnombre.value, fdescripcion.value)'>Actualizar Ciencia y Finalizar</button>
+                    <br>
+                </ng-container>
+                <ng-template #notUpdateCiencia>
+                    <button type="submit" class="btn btn-primary btn-block" (click)='guardarCambios(false, fcodigo.value, fnombre.value, fdescripcion.value)'>Crear Ciencia y Finalizar</button>
+                    <br>
+                </ng-template>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <ng-container *ngIf = "accion != 'Crear'; else notUpdate">
+                    <button type="submit" class="btn btn-secondary btn-block" (click)='guardarCambios(true, fcodigo.value, fnombre.value, fdescripcion.value)'>Actualizar Ciencia y Actualizar Carreras</button>
+                </ng-container>
+                <ng-template #notUpdate>
+                    <button type="submit" class="btn btn-secondary btn-block" (click)='guardarCambios(true, fcodigo.value, fnombre.value, fdescripcion.value)'>Crear Ciencia y Agregar Carreras</button>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <br>
+    <ng-container *ngIf="accion != 'Crear'">
+        <h1 class="panel-title-style display-5">Carreras</h1>
+        <p class="text-muted">Carreras a las que pertenece la ciencia</p>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr class="bg-secondary">
+                        <th class="text-light" scope="col">Facultad</th>
+                        <th class="text-light" scope="col">Carrera</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor = 'let carrera of ciencia$.carreras'>
+                        <td>{{ carrera.facultad }}</td>
+                        <td>{{ carrera.carrera }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br>
+    </ng-container>
+</div>

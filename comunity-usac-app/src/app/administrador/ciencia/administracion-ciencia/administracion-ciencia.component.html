@@ -1,0 +1,45 @@
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-9 col-sm-12">
+            <h1 class="panel-title-style display-3">Ciencias</h1>
+        </div>
+        <div class="col-md-3 col-sm-12">
+            <br>
+            <a class="btn btn-primary btn-block" routerLink="formulario-ciencia/-1" >Crear Ciencia</a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-sm-12" *ngFor = 'let ciencia of ciencias$'>
+            <div class="card text-center">
+                <div class="card-header">
+                    <b>{{ ciencia.nombre }}</b>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ ciencia.descripcion }}</p>
+                </div>
+                <ng-container *ngIf = 'ciencia.carreras.length != 0'>
+                    <div class="card-footer text-muted">
+                        <div class="row">
+                            <a routerLink="administracion-carrera" type="button" class="btn btn-outline-primary btn-sm tag" disabled *ngFor = 'let carrera of ciencia.carreras'>{{ carrera.carrera }}</a>
+                        </div>
+                    </div>
+                </ng-container>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-6"> 
+                            <a class="btn btn-success btn-block btn-sm" routerLink="formulario-ciencia/{{ ciencia.codigo }}">Actualizar</a>
+                        </div>
+                        <div class="col-md-6"> 
+                            <button class="btn btn-warning btn-block btn-sm" (click) = 'eliminarCiencia( ciencia.codigo )'>Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>

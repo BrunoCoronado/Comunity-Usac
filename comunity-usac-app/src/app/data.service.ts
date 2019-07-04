@@ -95,4 +95,48 @@ export class DataService {
   deleteCarreraCiencia(codigo_carrera, codigo_ciencia){
     return this.http.delete(`http://localhost:3000/comunity-usac/api/ciencia-carrera/${codigo_carrera}/${codigo_ciencia}`);
   }
+
+  getUsuarios(){
+    return this.http.get('http://localhost:3000/comunity-usac/api/usuario/'); 
+  }
+
+  getUsuario(registro){
+    return this.http.get(`http://localhost:3000/comunity-usac/api/usuario/${registro}`); 
+  }
+
+  postUsuario(body){
+    return this.http.post(`http://localhost:3000/comunity-usac/api/usuario/`, body);
+  }
+
+  putUsuario(body){
+    return this.http.put(`http://localhost:3000/comunity-usac/api/usuario/`, body);
+  }
+
+  deleteUsuario(registro){
+    return this.http.delete(`http://localhost:3000/comunity-usac/api/usuario/${registro}`);
+  }
+
+  postUsuarioRol(body){
+    return this.http.post(`http://localhost:3000/comunity-usac/api/usuario-rol/`, body);
+  }
+
+  deleteUsuarioRol(registro, codigo){
+    return this.http.delete(`http://localhost:3000/comunity-usac/api/usuario-rol/${registro}/${codigo}`);
+  }
+
+  postUsuarioCarrera(body){
+    return this.http.post(`http://localhost:3000/comunity-usac/api/usuario-carrera/`, body);
+  }
+
+  deleteUsuarioCarrera(registro, codigo){
+    return this.http.delete(`http://localhost:3000/comunity-usac/api/usuario-carrera/${registro}/${codigo}`);
+  }
+
+  postUsuarioCiencia(body){
+    return this.http.post(`http://localhost:3000/comunity-usac/api/usuario-ciencia/`, body);
+  }
+
+  deleteUsuarioCiencia(registro, codigo){
+    return this.http.delete(`http://localhost:3000/comunity-usac/api/usuario-ciencia/${registro}/${codigo}`);
+  }
 }

@@ -10,6 +10,7 @@ import { FormularioRolComponent } from './formulario-rol/formulario-rol.componen
 import { AdministracionCienciaComponent } from './administracion-ciencia/administracion-ciencia.component'
 import { FormularioCienciaComponent } from './formulario-ciencia/formulario-ciencia.component'
 import { FormularioCienciaCarreraComponent } from './formulario-ciencia/formulario-ciencia-carrera/formulario-ciencia-carrera.component'
+import { AdministracionUsuarioComponent } from './usuario/administracion-usuario/administracion-usuario.component'
 
 const routes: Routes = [
   { path: '', component: PanelAdministracionComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'administracion-ciencia', component: AdministracionCienciaComponent },
   { path: 'formulario-ciencia/:codigo', component: FormularioCienciaComponent },
   { path: 'formulario-ciencia/carrera/:codigo', component: FormularioCienciaCarreraComponent },
+  { path: 'administracion-usuario', component: AdministracionUsuarioComponent },
 ];
 
 @NgModule({

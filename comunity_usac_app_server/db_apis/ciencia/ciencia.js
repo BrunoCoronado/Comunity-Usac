@@ -1,4 +1,4 @@
-const database = require('../services/database');
+const database = require('../../services/database');
 
 async function buscar(cien){
     let query = `SELECT * FROM listar_ciencias`;

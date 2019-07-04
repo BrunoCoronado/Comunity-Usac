@@ -1,0 +1,439 @@
+<br>
+<ng-container [ngSwitch] = 'accion$'>
+    <ng-container *ngSwitchCase = '0'>
+        <!-- #region VIEW-->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 col-sm-12">
+                    <h1 class="panel-title-style display-3">Usuarios</h1>
+                </div>
+                <div class="col-md-3 col-sm-12">
+                    <br>
+                    <button class="btn btn-primary btn-block" (click) = 'cambioContenido(1)' >Crear Usuario</button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-12" *ngFor = 'let usuario of usuarios$'>
+                    <div class="card">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item">
+                                    <ng-container *ngIf = "usuario.estado == 1; else notFirst">
+                                        <a class="nav-link active">Información</a>
+                                    </ng-container>
+                                    <ng-template #notFirst>
+                                            <a class="nav-link" (click) = 'cambioTab(1, usuario.registro)'>Información</a>
+                                    </ng-template>
+                                </li>
+                                <ng-container *ngIf = "usuario.roles.length != 0">
+                                    <li class="nav-item">
+                                        <ng-container *ngIf = "usuario.estado == 2; else notSecond">
+                                            <a class="nav-link active">Roles/Cargos</a>
+                                        </ng-container>
+                                        <ng-template #notSecond>
+                                                <a class="nav-link" (click) = 'cambioTab(2, usuario.registro)'>Roles/Cargos</a>
+                                        </ng-template>
+                                    </li>
+                                </ng-container>
+                                <ng-container *ngIf = "usuario.facultades.length != 0 || usuario.carreras.length != 0">
+                                    <li class="nav-item">
+                                        <ng-container *ngIf = "usuario.estado == 3; else notThird">
+                                            <a class="nav-link active">Facultades y Carreras</a>
+                                        </ng-container>
+                                        <ng-template #notThird>
+                                                <a class="nav-link" (click) = 'cambioTab(3, usuario.registro)'>Facultades y Carreras</a>
+                                        </ng-template>
+                                    </li>
+                                </ng-container>
+                                <ng-container *ngIf = "usuario.ciencias.length != 0">
+                                    <li class="nav-item">
+                                        <ng-container *ngIf = "usuario.estado == 4; else notFourth">
+                                            <a class="nav-link active">Catedras</a>
+                                        </ng-container>
+                                        <ng-template #notFourth>
+                                                <a class="nav-link" (click) = 'cambioTab(4, usuario.registro)'>Catedras</a>
+                                        </ng-template>
+                                    </li>
+                                </ng-container>
+                            </ul>
+                        </div>
+                        <ng-container *ngIf = "usuario.estado == 1">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <img class="img-thumbnail" src="../../assets/system/usaclogo.png" alt="Card image cap">
+                                </div>
+                                <div class="col-md-8">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item"><b>Nombre:</b> {{ usuario.nombre }}</li>
+                                        <li class="list-group-item"><b>Correo:</b> {{ usuario.correo }}</li>
+                                        <li class="list-group-item"><b>Teléfono:</b> {{ usuario.telefono }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf = "usuario.estado == 2">
+                            <div class="card-footer text-muted">
+                                <div class="row">
+                                    roles
+                                    <a href="/administracion-carrera" type="button" class="btn btn-outline-primary btn-sm tag" disabled *ngFor = 'let rol of usuario.roles'>{{ rol.rol }}</a>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf = "usuario.estado == 3">
+                            <div class="card-footer text-muted">
+                                <div class="row">
+                                    facultades
+                                    <a href="/administracion-carrera" type="button" class="btn btn-outline-primary btn-sm tag" disabled *ngFor = 'let facultad of usuario.facultades'>{{ facultad.facultad }}</a>
+                                </div>
+                            </div>
+                            <div class="card-footer text-muted">
+                                <div class="row">
+                                    carreras
+                                    <a href="/administracion-carrera" type="button" class="btn btn-outline-primary btn-sm tag" disabled *ngFor = 'let carrera of usuario.carreras'>{{ carrera.carrera }}</a>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf = "usuario.estado == 4">
+                            <div class="card-footer text-muted">
+                                <div class="row">
+                                    ciencias
+                                    <a href="/administracion-carrera" type="button" class="btn btn-outline-primary btn-sm tag" disabled *ngFor = 'let ciencia of usuario.ciencias_tag'>{{ ciencia.ciencia }}</a>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-md-6"> 
+                                    <button class="btn btn-success btn-block" (click) = 'cambioContenido(2, usuario.registro)' >Actualizar</button>
+                                    <br>
+                                </div>
+                                <div class="col-md-6"> 
+                                    <button class="btn btn-warning btn-block" (click) = 'eliminarUsuario(usuario.registro)' >Eliminar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+        <!-- #endregion -->
+    </ng-container>
+    <!-- #region CREATE/UPDATE-->
+    <ng-container *ngSwitchCase = '1'>
+        <!-- #region USUARIO-->
+            <div class="container">
+                <h1 class="panel-title-style text-center display-4">{{ titulo$ }}</h1>
+                <p class="text-muted">*Cambio de fotografía en el perfil de usuario</p>
+                <div class="col-sm-12 col-md-12">
+                    <div [hidden]="titulo$ != 'Crear Usuario'" class="form-group">
+                        <label>Registro</label>
+                        <input #fregistro type="number" class="form-control" placeholder="Registro" value="{{ usr.registro }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input #fnombre type="text" class="form-control" placeholder="Nombre" value="{{ usr.nombre }}">
+                    </div> 
+                    <div class="form-group">
+                        <label>Contaseña</label>
+                        <input #fcontrasenia type="password" class="form-control" placeholder="Contraseña" value="{{ usr.constrasenia }}">
+                    </div> 
+                    <div class="form-group">
+                        <label>Correo</label>
+                        <input #fcorreo type="email" class="form-control" placeholder="Correo" value="{{ usr.correo }}">
+                    </div> 
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input #ftelefono type="number" class="form-control" placeholder="Teléfono" value="{{ usr.telefono }}">
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <button type="submit" class="btn btn-primary btn-block" (click) = 'guardarCambios(false, fregistro.value, fnombre.value, fcontrasenia.value, fcorreo.value, ftelefono.value)'>Finalizar</button>
+                        <br>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <button type="submit" class="btn btn-secondary btn-block" (click) = 'guardarCambios(true, fregistro.value, fnombre.value, fcontrasenia.value, fcorreo.value, ftelefono.value)'>Continuar</button>
+                        <p class="text-muted">Administrar roles, facultades y catedras</p>
+                    </div>
+                </div>
+            </div>
+            <ng-container *ngIf="titulo$ != 'Crear Usuario'">
+                <div class="container">
+                    <div class="row">
+                        <ng-container *ngIf = "usr.ciencias.length != 0; else notTeacher">
+                            <div class="col-md-3 col-sm-12">
+                                <h1 class="panel-title-style display-5">Roles</h1>
+                                <p class="text-muted">Roles que ejerce.</p>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr class="bg-secondary">
+                                                <th class="text-light" scope="col">Rol</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor = 'let r of usr.roles'>
+                                                <td>{{ r.rol }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-sm-12">
+                                <h1 class="panel-title-style display-5">Facultades/Carreras</h1>
+                                <p class="text-muted">Facultades y Carreras donde participa.</p>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr class="bg-secondary">
+                                                <th class="text-light" scope="col">Facultad</th>
+                                                <th class="text-light" scope="col">Carrera</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor = 'let ca of usr.carreras'>
+                                                <td>{{ ca.facultad }}</td>
+                                                <td>{{ ca.carrera }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <h1 class="panel-title-style display-5">Ciencias</h1>
+                                <p class="text-muted">Ciencias en las que da clase.</p>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr class="bg-secondary">
+                                                <th class="text-light" scope="col">Carrera</th>
+                                                <th class="text-light" scope="col">Ciencia</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor = 'let ciencia of usr.ciencias'>
+                                                <td>{{ ciencia.carrera }}</td>
+                                                <td>{{ ciencia.ciencia }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-template #notTeacher>
+                            <div class="col-md-6 col-sm-12">
+                                <h1 class="panel-title-style display-5">Roles</h1>
+                                <p class="text-muted">Roles que ejerce.</p>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr class="bg-secondary">
+                                                <th class="text-light" scope="col">Rol</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor = 'let r of usr.roles'>
+                                                <td>{{ r.rol }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <h1 class="panel-title-style display-5">Facultades/Carreras</h1>
+                                <p class="text-muted">Facultades y Carreras donde participa.</p>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr class="bg-secondary">
+                                                <th class="text-light" scope="col">Facultad</th>
+                                                <th class="text-light" scope="col">Carrera</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor = 'let ca of usr.carreras'>
+                                                <td>{{ ca.facultad }}</td>
+                                                <td>{{ ca.carrera }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+                <br>
+            </ng-container>
+        <!-- #endregion -->
+    </ng-container>
+    <ng-container *ngSwitchCase = '2'>
+        <!-- #region ROLES/FACULTADES/CATEDRAS-->
+            <div class="container">
+                <h1 class="panel-title-style text-center display-5">{{ titulo$ }} a <i>{{ usr.nombre }}</i></h1>
+                <br>
+                <div class="row">
+                    <div class="{{ classActionSecond }}">
+                        <div class="row">
+                            <h6 class="panel-title-style text-center display-6">Agregar Roles</h6>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Rol</label>
+                                    <select #fcodigoRol class="form-control">
+                                        <ng-container *ngFor = 'let _rol of this.selectRolesFiltro$'>
+                                            <option value="{{ _rol.codigo }}">{{ _rol.nombre }}</option>
+                                        </ng-container>
+                                    </select>
+                                </div> 
+                            </div>
+                            <div class="col-md-12">
+                                <br>
+                                <button type="submit" class="btn btn-secondary btn-block"  (click) = 'agregarRol(fcodigoRol.value)'>Agregar</button>
+                            </div>
+                            <div class="col-md-12">
+                                <br>
+                                <h1 class="panel-title-style display-6">Roles</h1>
+                                <p class="text-muted">Roles que ejerce.</p>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-sm">
+                                        <thead>
+                                            <tr class="bg-secondary">
+                                                <th class="text-light" scope="col">Rol</th>
+                                                <th class="text-light" scope="col">Eliminar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor = 'let r_ of usr.roles'>
+                                                <td>{{ r_.rol }}</td>
+                                                <td><button type="submit" class="btn btn-warning btn-sm" (click) = 'eliminarRol(r_.codigor)'>Eliminar</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="{{ classActionSecond }}">
+                        <div class="row">
+                            <h6 class="panel-title-style text-center display-6">Agregar Facultades/Carreras</h6>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Facultad</label>
+                                    <select class="form-control" (change) = 'updateCarreras($event.target.value)'>
+                                        <ng-container *ngFor = 'let _facultad of selectFacultades$'>
+                                            <option value="{{ _facultad.codigo }}">{{ _facultad.nombre }}</option>
+                                        </ng-container>
+                                    </select>
+                                </div> 
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Carrera</label>
+                                    <select #fcodigoCarrera class="form-control">
+                                        <ng-container *ngFor = 'let _caFC of selectCarrerasFiltroFC$'>
+                                            <option value="{{ _caFC.codigo }}">{{ _caFC.nombre }}</option>
+                                        </ng-container>
+                                    </select>
+                                </div> 
+                            </div>
+                            <div class="col-md-12">
+                                <br>
+                                <button type="submit" class="btn btn-secondary btn-block" (click) = 'agregarCarrera(fcodigoCarrera.value)'>Agregar</button>
+                            </div>
+                            <div class="col-md-12">
+                                <br>
+                                <h1 class="panel-title-style display-6">Facultades/Carreras</h1>
+                                <p class="text-muted">Facultades/Carreras donde participa.</p>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-sm">
+                                        <thead>
+                                            <tr class="bg-secondary">
+                                                <th class="text-light" scope="col">Facultad</th>
+                                                <th class="text-light" scope="col">Carrera</th>
+                                                <th class="text-light" scope="col">Eliminar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor = 'let c_ of usr.carreras'>
+                                                <td>{{ c_.facultad }}</td>
+                                                <td>{{ c_.carrera }}</td>
+                                                <td><button type="submit" class="btn btn-warning btn-sm" (click) = 'eliminarCarrera(c_.codigoca)'>Eliminar</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-container *ngIf = 'cat$'>
+                        <div class="col-md-4 col-sm-12">
+                            <div class="row">
+                                <h6 class="panel-title-style text-center display-6">Agregar Catedras</h6>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Carrera</label>
+                                        <select class="form-control" (change)="updateCiencias($event.target.value)">
+                                            <ng-container *ngFor = 'let _caF of selectCarrerasFiltroC$'>
+                                                <option value="{{ _caF.codigo }}">{{ _caF.nombre }}</option>
+                                            </ng-container>
+                                        </select>
+                                    </div> 
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Ciencia</label>
+                                        <select #fcodigoCiencia class="form-control" >
+                                            <ng-container *ngFor = 'let _ci of selectCienciasFiltro$'>
+                                                <option value="{{ _ci.codigo }}">{{ _ci.nombre }}</option>
+                                            </ng-container>
+                                        </select>
+                                    </div> 
+                                </div>
+                                <div class="col-md-12">
+                                    <br>
+                                    <button type="submit" class="btn btn-secondary btn-block" (click) = 'agregarCiencia(fcodigoCiencia.value)'>Agregar</button>
+                                </div>
+                                <div class="col-md-12">
+                                    <br>
+                                    <h1 class="panel-title-style display-6">Catedras</h1>
+                                    <p class="text-muted">Catedras que imparte.</p>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr class="bg-secondary">
+                                                    <th class="text-light" scope="col">Ciencia</th>
+                                                    <th class="text-light" scope="col">Eliminar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor = 'let ci_ of usr.ciencias'>
+                                                    <td>{{ ci_.ciencia }}</td>
+                                                    <td><button type="submit" class="btn btn-warning btn-sm" (click) = 'eliminarCiencia(ci_.codigoci)'>Eliminar</button></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <br>
+                        <button type="submit" class="btn btn-primary btn-block" (click) = 'cambioContenido(4)'>Finalizar</button>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        <!-- #endregion -->
+    </ng-container>
+    <!-- #endregion -->
+</ng-container>
+<br>

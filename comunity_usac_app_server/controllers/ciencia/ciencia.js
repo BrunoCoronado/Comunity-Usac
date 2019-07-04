@@ -1,4 +1,4 @@
-const ciencia = require('../db_apis/ciencia');
+const ciencia = require('../../db_apis/ciencia/ciencia');
 
 async function get(request, response, next){
     try {
@@ -6,8 +6,11 @@ async function get(request, response, next){
             codigo_ciencia: parseInt(request.params.codigo, 10)
         }
         const rows = await ciencia.buscar(cien);
-        const data = convertirResultSet(rows);
-        response.status(200).json(data);
+        if(rows){
+            const data = convertirResultSet(rows);
+            response.status(200).json(data);
+        }else
+            response.status(404).end();
     } catch (error) {
         next(error);
     }
@@ -66,7 +69,7 @@ function convertirResultSet(rows){
     let ciencias = [], carreras = [], encontrado = false, i;
     rows.forEach( element => {
         for (i = 0; i < ciencias.length; i++) {
-            if(ciencias[i].nombre == element.NOMBRE){
+            if(ciencias[i].codigo == element.CODIGO_CIENCIA){
                 encontrado = true;
                 break;
             }

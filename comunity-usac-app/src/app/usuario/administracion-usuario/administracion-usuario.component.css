@@ -1,0 +1,15 @@
+.img-thumbnail{
+    padding: 5%;
+    border-radius: .5rem;
+    max-width: 11rem;
+    height: auto;
+    margin: 1%;
+}
+
+.nav-link{
+    font-size: 0.9rem;
+}
+
+.display-6{
+    margin: 3%;
+}

@@ -1,9 +1,8 @@
-const ciencia_carrera = require('../db_apis/ciencia-carrera');
+const ciencia_carrera = require('../../db_apis/ciencia/ciencia-carrera');
 
 async function post(request, response, next){
     try {
         let data = capturarDataRequest(request);
-        console.log(data);
         const result = await ciencia_carrera.crear(data);
         if(!result.error)
             response.status(201).end();

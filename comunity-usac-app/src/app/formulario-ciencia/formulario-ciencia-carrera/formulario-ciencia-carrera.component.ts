@@ -23,8 +23,8 @@ export class FormularioCienciaCarreraComponent implements OnInit {
     this.data.getFacultades().subscribe( data => {
       this.facultades$ = data; 
       this.updateCarreras(this.facultades$[0].codigo); 
+      this.obtenerCiencia(this.ciencia$);
     });
-    this.obtenerCiencia(this.ciencia$);
   }
 
   updateCarreras(codigo){

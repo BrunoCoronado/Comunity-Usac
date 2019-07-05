@@ -390,7 +390,7 @@ BEGIN
 END;
 COMMIT;
 
-DELETE FROM carrera_ciencia WHERE codigo_carrera = 10 AND codigo_ciencia = 2;
+DELETE FROM carrera_ciencia WHERE codigo_carrera = 1 AND codigo_ciencia = 2;
 COMMIT;
 
 INSERT INTO rol(nombre, estado) VALUES('Administrador', 0);
@@ -561,6 +561,18 @@ FROM usuario_rol ur, usuario_carrera uca, usuario_ciencia uci
 RIGHT JOIN usuario u ON ur.registro = u.registro AND u.estado = 0
 INNER JOIN rol r ON ur.codigo_rol = r.codigo_rol AND r.estado = 0
 
+/*CREATE OR REPLACE VIEW listar_usuarios AS
+SELECT u.contrasenia, u.registro, u.nombre, u.correo, u.telefono, u.fotografia, r.nombre "rol", r.codigo_rol, ca.nombre "carrera", ca.codigo_carrera, ci.nombre "ciencia", ci.codigo_ciencia, fa.nombre "facultad", fa.codigo_facultad
+FROM usuario u
+LEFT JOIN usuario_rol ur ON ur.registro = u.registro AND ur.estado = 0
+LEFT JOIN rol r ON ur.codigo_rol = r.codigo_rol AND r.estado = 0
+LEFT JOIN usuario_carrera uca ON uca.registro = u.registro AND uca.estado = 0
+LEFT JOIN carrera ca ON uca.codigo_carrera = ca.codigo_carrera AND ca.estado = 0
+LEFT JOIN facultad fa ON fa.codigo_facultad = ca.codigo_facultad AND fa.estado = 0
+LEFT JOIN usuario_ciencia uci ON uci.registro = u.registro AND uci.estado = 0
+LEFT JOIN ciencia ci ON uci.codigo_ciencia = ci.codigo_ciencia AND ci.estado = 0
+WHERE u.estado = 0*/
+
 CREATE OR REPLACE VIEW listar_usuarios AS
 SELECT u.contrasenia, u.registro, u.nombre, u.correo, u.telefono, u.fotografia, r.nombre "rol", r.codigo_rol, ca.nombre "carrera", ca.codigo_carrera, ci.nombre "ciencia", ci.codigo_ciencia, fa.nombre "facultad", fa.codigo_facultad
 FROM usuario u
@@ -568,16 +580,26 @@ LEFT JOIN usuario_rol ur ON ur.registro = u.registro AND ur.estado = 0
 LEFT JOIN rol r ON ur.codigo_rol = r.codigo_rol AND r.estado = 0
 LEFT JOIN usuario_carrera uca ON uca.registro = u.registro AND uca.estado = 0
 LEFT JOIN carrera ca ON uca.codigo_carrera = ca.codigo_carrera AND ca.estado = 0
-LEFT JOIN usuario_ciencia uci ON uci.registro = u.registro AND uci.estado = 0
-LEFT JOIN ciencia ci ON uci.codigo_ciencia = ci.codigo_ciencia AND ci.estado = 0
+LEFT JOIN carrera_ciencia caci ON caci.codigo_carrera = ca.codigo_carrera AND caci.estado = 0
 LEFT JOIN facultad fa ON fa.codigo_facultad = ca.codigo_facultad AND fa.estado = 0
-WHERE u.estado = 0
+LEFT JOIN usuario_ciencia uci ON uci.registro = u.registro AND uci.estado = 0
+LEFT JOIN ciencia ci ON uci.codigo_ciencia = ci.codigo_ciencia AND ci.estado = 0 AND  caci.codigo_ciencia = ci.codigo_ciencia 
+WHERE u.estado = 0;
 
-SELECT * FROM listar_usuarios;
+SELECT * FROM listar_usuarios WHERE registro = 3;
+SELECT * FROM carrera;
+SELECT * FROM rol;
 SELECT * FROM usuario_carrera;
 SELECT * FROM usuario_rol;
 SELECT * FROM usuario_ciencia;
 SELECT * FROM listar_usuarios WHERE registro = 3;
+SELECT * FROM usuario
+DELETE FROM usuario_ciencia  WHERE estado = 1;
+COMMIT;
+DELETE FROM usuario WHERE contrasenia = 'delbarrio';
+COMMIT;
+DELETE FROM usuario_ciencia WHERE codigo_u_ci > 6;
+COMMIT;
 
 SELECT * FROM usuario;
 

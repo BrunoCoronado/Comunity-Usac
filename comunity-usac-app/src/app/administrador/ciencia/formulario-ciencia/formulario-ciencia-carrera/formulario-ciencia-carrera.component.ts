@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AdministracionService } from '../../../administracion.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AccesoAdministradorService } from 'src/app/administrador/acceso-administrador.service';
 
 @Component({
   selector: 'app-formulario-ciencia-carrera',
@@ -14,11 +15,12 @@ export class FormularioCienciaCarreraComponent implements OnInit {
   carrerasSelect$: any;
   facultades$: any;
 
-  constructor(private data: AdministracionService, private route: ActivatedRoute, private router: Router) { 
+  constructor(private data: AdministracionService, private route: ActivatedRoute, private router: Router, private acceso: AccesoAdministradorService) { 
     route.params.subscribe( data => this.ciencia$ = data.codigo );
   }
 
   ngOnInit() {
+    this.acceso.validarAcceso();
     this.data.getCarreras().subscribe( data => this.carreras$ = data );
     this.data.getFacultades().subscribe( data => {
       this.facultades$ = data; 

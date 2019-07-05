@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AdministracionService } from '../../administracion.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AccesoAdministradorService } from '../../acceso-administrador.service';
 
 @Component({
   selector: 'app-formulario-ciencia',
@@ -12,11 +13,12 @@ export class FormularioCienciaComponent implements OnInit {
   ciencia$: any;
   accion: string;
 
-  constructor(private data: AdministracionService, private route: ActivatedRoute, private router: Router) { 
+  constructor(private data: AdministracionService, private route: ActivatedRoute, private router: Router, private acceso: AccesoAdministradorService) { 
     this.route.params.subscribe( data => this.ciencia$ = data.codigo );
   }
 
   ngOnInit() {
+    this.acceso.validarAcceso();
     if(this.ciencia$ == -1){
       this.accion = 'Crear';
     }else{

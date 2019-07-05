@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AdministracionService } from '../../administracion.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AccesoAdministradorService } from '../../acceso-administrador.service';
 
 @Component({
   selector: 'app-formulario-rol',
@@ -12,11 +13,12 @@ export class FormularioRolComponent implements OnInit {
   rol$: any;
   accion: string;
 
-  constructor(private data: AdministracionService, private route: ActivatedRoute, private router: Router) { 
+  constructor(private data: AdministracionService, private route: ActivatedRoute, private router: Router, private acceso: AccesoAdministradorService) { 
     route.params.subscribe( data => this.rol$ = data.codigo );
   }
 
   ngOnInit() {
+    this.acceso.validarAcceso();
     if(this.rol$ == -1){
       this.accion = 'Crear';
     }else{

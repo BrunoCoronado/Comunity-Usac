@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AdministracionService } from '../../administracion.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AccesoAdministradorService } from '../../acceso-administrador.service';
 
 @Component({
   selector: 'app-actualizar-facultad',
@@ -12,11 +13,12 @@ export class ActualizarFacultadComponent implements OnInit {
   facultad$: any;
   accion: string;
   crear: boolean = true;
-  constructor(private data: AdministracionService, private route: ActivatedRoute, public router: Router) { 
+  constructor(private data: AdministracionService, private route: ActivatedRoute, public router: Router, private acceso: AccesoAdministradorService) { 
     this.route.params.subscribe(data => this.facultad$ = data.codigo)
   }
 
   ngOnInit() {
+    this.acceso.validarAcceso();
     if(this.facultad$ == -1){
       this.accion = 'Crear';
       this.crear = true;

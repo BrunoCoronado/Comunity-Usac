@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AccesoAdministradorService } from '../acceso-administrador.service';
 
 @Component({
   selector: 'app-panel-administracion',
@@ -7,9 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PanelAdministracionComponent implements OnInit {
 
-  constructor() { }
+  constructor(private acceso: AccesoAdministradorService) { }
 
   ngOnInit() {
+    this.acceso.validarAcceso();
   }
-
 }

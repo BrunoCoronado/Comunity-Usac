@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AdministracionService } from '../../administracion.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AccesoAdministradorService } from '../../acceso-administrador.service';
 
 @Component({
   selector: 'app-formulario-carrera',
@@ -14,11 +15,12 @@ export class FormularioCarreraComponent implements OnInit {
   facultades$: any;
   crear: boolean;
 
-  constructor(private data: AdministracionService, private route: ActivatedRoute, private router: Router) { 
+  constructor(private data: AdministracionService, private route: ActivatedRoute, private router: Router, private acceso: AccesoAdministradorService) { 
     this.route.params.subscribe(data => this.carrera$ = data.codigo);
   }
 
   ngOnInit() {
+    this.acceso.validarAcceso();
     this.data.getFacultades().subscribe( data => this.facultades$ = data);
     if (this.carrera$ == -1) {
       this.accion = 'Crear';

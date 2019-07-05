@@ -9,6 +9,7 @@ const usuario = require('../controllers/usuario/usuario');
 const usuario_rol = require('../controllers/usuario/usuario-rol');
 const usuario_carrera = require('../controllers/usuario/usuario-carrera');
 const usuario_ciencia = require('../controllers/usuario/usuario-ciencia');
+const autenticacion = require('../controllers/autenticacion');
 
 router.route('/facultad/:codigo?')
     .get(facultad.get)
@@ -55,5 +56,8 @@ router.route('/usuario-carrera/:registro?/:codigo?')
 router.route('/usuario-ciencia/:registro?/:codigo?')
     .post(usuario_ciencia.post)
     .delete(usuario_ciencia.delete);
+
+router.route('/autenticar')
+    .post(autenticacion.post);
 
 module.exports = router;

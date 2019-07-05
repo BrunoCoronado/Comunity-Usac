@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AdministracionService } from '../../administracion.service'
+import { AccesoAdministradorService } from '../../acceso-administrador.service';
 
 @Component({
   selector: 'app-administracion-facultad',
@@ -9,9 +10,10 @@ import { AdministracionService } from '../../administracion.service'
 export class AdministracionFacultadComponent implements OnInit {
 
   facultades$: Object;
-  constructor(private data: AdministracionService) { }
+  constructor(private data: AdministracionService, private acceso: AccesoAdministradorService) { }
 
   ngOnInit() {
+    this.acceso.validarAcceso();
     this.obtenerFacultades();
   }
 

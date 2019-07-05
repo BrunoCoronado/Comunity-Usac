@@ -5,6 +5,8 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
+
+
 @NgModule({
   imports: [
     CommonModule,
@@ -12,6 +14,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     TooltipModule.forRoot(),
     ModalModule.forRoot()
   ],
-  exports: [BsDropdownModule, TooltipModule, ModalModule]
+  exports: [BsDropdownModule, TooltipModule, ModalModule,]
 })
 export class AppBootstrapModule {}

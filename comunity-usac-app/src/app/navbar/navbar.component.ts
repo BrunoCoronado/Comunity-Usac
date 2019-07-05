@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { SessionStorageService } from 'ngx-webstorage';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor() { }
+  navbarCollapsed = true;
+  sesionActiva = false;
+
+  constructor(private sessionStorage: SessionStorageService, private router: Router) { }
 
   ngOnInit() {
   }
 
+  cerrarSesion(){
+    this.sessionStorage.clear('usr');
+    this.sesionActiva = false;
+    this.router.navigate(['comunity-usac/autenticacion/login']);
+  }
 }

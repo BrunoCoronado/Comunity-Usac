@@ -18,6 +18,8 @@ import { AutenticacionModule } from './autenticacion/autenticacion.module';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
 import { ComunModule } from './comun/comun.module';
 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,6 +28,7 @@ import { ComunModule } from './comun/comun.module';
   ],
   imports: [
     CommonModule,
+    NgbModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,

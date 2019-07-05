@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { SessionStorageService } from 'ngx-webstorage';
+import { ComunService } from '../comun.service';
 
 @Component({
   selector: 'app-perfil',
@@ -7,9 +9,25 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PerfilComponent implements OnInit {
 
-  constructor() { }
+  usr: any = {};
+  editable$ = false;
+  @ViewChild('ffotografia', { static: false }) inputFotografia: ElementRef;
 
-  ngOnInit() {
+  constructor(private sessionStorage: SessionStorageService, private data: ComunService) { }
+
+  ngOnInit() {  
+    if(this.sessionStorage.retrieve('usr'))
+      this.data.getUsuario(this.sessionStorage.retrieve('usr').registro).subscribe( data => this.usr = data[0] );
   }
 
+  enableEditar(){
+    this.editable$ = true;
+  }
+
+  guardarCambios(registro, nombre, contrasenia, correo, telefono, fotografia){
+    this.editable$ = false;
+    this.inputFotografia.nativeElement.value = '';
+    fotografia = fotografia === ""?this.usr.fotografia:fotografia;
+    this.data.putUsuario({ registro: registro, nombre: nombre, contrasenia: contrasenia, correo: correo, telefono:telefono, fotografia: fotografia }).subscribe( () => this.data.getUsuario(this.sessionStorage.retrieve('usr').registro).subscribe( data => this.usr = data[0] ) );
+  }
 }

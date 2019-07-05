@@ -9,7 +9,11 @@
     <div class="collapse navbar-collapse" [ngbCollapse]="navbarCollapsed" id="navbarSupportedContent"> 
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link text-white">Active</a>
+                <ng-container *ngIf = "sessionStorage.retrieve('usr')">
+                        <ng-container *ngIf = "sessionStorage.retrieve('usr').rol != 8">
+                            <a class="nav-link text-white" href = "comunity-usac/comun/perfil">Perfil</a>
+                        </ng-container>
+                </ng-container>
             </li>
         </ul>
         <ul class="navbar-nav">

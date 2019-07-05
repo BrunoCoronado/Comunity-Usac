@@ -602,11 +602,21 @@ DELETE FROM usuario_ciencia WHERE codigo_u_ci > 6;
 COMMIT;
 
 SELECT * FROM usuario;
+SELECT * FROM rol;
 
 UPDATE usuario SET estado = 0 WHERE registro > 0;
 UPDATE usuario_rol SET estado = 0 WHERE codigo_u_r > 0;
 UPDATE usuario_carrera SET estado = 0 WHERE codigo_u_ca > 0;
 UPDATE usuario_ciencia SET estado = 0 WHERE codigo_u_ci > 0;
 COMMIT;
+
+SELECT u.registro "registro" , ur.codigo_rol "rol"
+FROM usuario u, usuario_rol ur
+WHERE ur.registro = 1 
+AND ur.codigo_rol = 8
+AND ur.estado = 0
+AND  u.contrasenia = 'admin'
+    
+    
 
 

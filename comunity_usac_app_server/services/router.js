@@ -10,6 +10,10 @@ const usuario_rol = require('../controllers/usuario/usuario-rol');
 const usuario_carrera = require('../controllers/usuario/usuario-carrera');
 const usuario_ciencia = require('../controllers/usuario/usuario-ciencia');
 const autenticacion = require('../controllers/autenticacion');
+const tema = require('../controllers/tema/tema');
+const categoria = require('../controllers/tema/categoria');
+const multimedia = require('../controllers/multimedia');
+const respuesta = require('../controllers/tema/respuesta');
 
 router.route('/facultad/:codigo?')
     .get(facultad.get)
@@ -59,5 +63,22 @@ router.route('/usuario-ciencia/:registro?/:codigo?')
 
 router.route('/autenticar')
     .post(autenticacion.post);
+
+router.route('/tema/:codigo?')
+    .get(tema.get)
+    .post(tema.post);
+
+router.route('/tema-categoria/:codigo?')
+    .post(categoria.post)
+    .delete(categoria.delete);
+
+router.route('/tema-respuesta/:codigo?')
+    .get(respuesta.get)
+    .post(respuesta.post);
+
+router.route('/multimedia/:codigo?')
+    .get(multimedia.get)
+    .post(multimedia.post)
+    .delete(multimedia.delete);
 
 module.exports = router;

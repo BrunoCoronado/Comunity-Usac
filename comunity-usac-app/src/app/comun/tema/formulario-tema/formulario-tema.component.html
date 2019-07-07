@@ -1,1 +1,153 @@
-<p>formulario-tema works!</p>
+<br>
+<div class="container">
+    <h1 class="panel-title-style text-center display-4">Crear Tema</h1>
+    <br>
+    <div class="col-sm-12 col-md-12">
+        <div class="form-group">
+            <label>Titulo</label>
+            <input #titulo type="text" class="form-control" placeholder="Nombre">
+        </div> 
+        <div class="form-group ">
+            <label>Descripción</label>
+            <!--<input #fdescripcion type="text" class="form-control" placeholder="Descripción">-->
+            <textarea #descripcion class="form-control" aria-label="With textarea" placeholder="Descripción"></textarea>
+        </div>
+    </div>
+    <br>
+    <h1 class="panel-title-style display-5">Categorias</h1>
+    <div class="row">
+        <div class="col-md-4 col-sm-12">
+            <h1 class="panel-title-style display-6">Facultades</h1>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-sm-8">
+                        <div class="form-group">
+                            <select #catFac class="form-control">
+                                <ng-container *ngFor = 'let facultad of facultades'>
+                                    <option value="{{ facultad.codigo }}">{{ facultad.nombre }}</option>
+                                </ng-container>
+                            </select>
+                        </div> 
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <button type="submit" class="btn btn-primary" (click) = 'agregarFacultad(catFac.value)' >Agregar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr class="bg-secondary">
+                            <th class="text-light" scope="col">Facultad</th>
+                            <th class="text-light" scope="col">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor = 'let _facultad of facultadesC'>
+                            <td>{{ _facultad.nombre }}</td>
+                            <td><button type="submit" class="btn btn-warning btn-sm" (click) = 'removerFacultad(_facultad.codigo)'>Eliminar</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <h1 class="panel-title-style display-6">Carreras</h1>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-sm-8">
+                        <div class="form-group">
+                            <select #catCar class="form-control">
+                                <ng-container *ngFor = 'let carrera of carreras'>
+                                    <option value="{{ carrera.codigo }}">{{ carrera.nombre }}</option>
+                                </ng-container>
+                            </select>
+                        </div> 
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <button type="submit" class="btn btn-primary" (click) = 'agregarCarrera(catCar.value)'>Agregar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr class="bg-secondary">
+                            <th class="text-light" scope="col">Carrera</th>
+                            <th class="text-light" scope="col">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor = 'let _carrera of carrerasC'>
+                            <td>{{ _carrera.nombre }}</td>
+                            <td><button type="submit" class="btn btn-warning btn-sm" (click) = 'removerCarrera( _carrera.codigo )'>Eliminar</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <h1 class="panel-title-style display-6">Ciencias</h1>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-sm-8">
+                        <div class="form-group">
+                            <select #catCie class="form-control">
+                                <ng-container *ngFor = 'let ciencia of ciencias'>
+                                    <option value="{{ ciencia.codigo }}">{{ ciencia.nombre }}</option>
+                                </ng-container>
+                            </select>
+                        </div> 
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <button type="submit" class="btn btn-primary" (click) = 'agregarCiencia(catCie.value)'>Agregar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr class="bg-secondary">
+                            <th class="text-light" scope="col">Ciencia</th>
+                            <th class="text-light" scope="col">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor = 'let _ciencia of cienciasC'>
+                            <td>{{ _ciencia.nombre }}</td>
+                            <td><button type="submit" class="btn btn-warning btn-sm" (click) = 'removerCiencia(_ciencia.codigo)'>Eliminar</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-md-4 col-sm-12">
+            <h1 class="panel-title-style display-5">Imagenes</h1>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <div class="custom-file">
+                <input #fotografia type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                <label class="custom-file-label" for="inputGroupFile01">Seleccionar arhivo</label>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-12">
+            <button class="btn btn-primary btn-block" (click) = 'agregarFotografia(fotografia.value)'>Subir</button>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <ng-container *ngFor = 'let fotografia of fotografias'>
+            <div class="col-md-2 col-sm2">
+                <td><button type="submit" class="btn btn-warning btn-sm" (click) = 'removerFotografia(fotografia)'>Eliminar</button></td>
+                <img class="card-img-top image-panel-facultad" src="../../../../assets/system/usaclogo.png" alt="Card image cap">
+            </div>
+        </ng-container>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary btn-block" (click) = 'guardarTema(titulo.value, descripcion.value)'>Publicar</button>
+    <br>
+</div>

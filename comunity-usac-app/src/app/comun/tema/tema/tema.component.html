@@ -1,6 +1,53 @@
 <br>
 <div class="container">
     <div class="row">
-        <h1 class="panel-title-style display-1">Temas</h1>
+        <div class="col-md-9 col-sm-12">
+            <h1 class="panel-title-style display-3">Temas</h1>
+        </div>
+        <div class="col-md-3 col-sm-12">
+            <br>
+            <a class="btn btn-primary btn-block" href = 'comunity-usac/comun/tema/formulario'>Crear Tema</a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-sm-12" *ngFor = 'let tema of temas'>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ tema.TITULO }}</h5>
+                        <p class="card-subtitle mb-2 text-muted">Publicado por {{ tema.autor }} el {{ tema.FECHA_CREACION }}</p>
+                        <p class="card-text">{{ tema.contenido.substr(0, 50) }} <a href = "comunity-usac/comun/tema/discucion-tema/{{tema.CODIGO_TEMA}}" class="card-link">ver más</a></p>
+                        <ng-container *ngIf = 'tema.respuestas; else noResponses'>
+                            <p class="card-subtitle mb-2 text-muted">Respuestas: {{ tema.respuestas }}</p>
+                        </ng-container>
+                        <ng-template #noResponses>
+                                <p class="card-subtitle mb-2 text-muted">Respuestas: 0</p>
+                        </ng-template>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <ng-container *ngIf = 'tema.facultades.length != 0'>
+                            <div class="row">
+                                Facultades
+                                <a [routerLink] = "" type="button" class="btn btn-outline-primary btn-sm tag" disabled *ngFor = 'let facultad of tema.facultades'>{{ facultad.facultad }}</a>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf = 'tema.carreras.length != 0'>
+                            <div class="row">
+                                Carreras
+                                <a [routerLink] = "" type="button" class="btn btn-outline-primary btn-sm tag" disabled *ngFor = 'let carrera of tema.carreras'>{{ carrera.carrera }}</a>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf = 'tema.ciencias.length != 0'>
+                            <div class="row">
+                                Ciencias
+                                <a [routerLink] = "" type="button" class="btn btn-outline-primary btn-sm tag" disabled *ngFor = 'let ciencia of tema.ciencias'>{{ ciencia.ciencia }}</a>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            <br>
+        </div>
     </div>
 </div>

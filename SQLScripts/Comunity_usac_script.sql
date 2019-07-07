@@ -3,8 +3,16 @@ CREATE SEQUENCE ca_ci_registro_sequence;
 CREATE SEQUENCE u_r_registro_sequence;
 CREATE SEQUENCE u_ca_registro_sequence;
 CREATE SEQUENCE u_ci_registro_sequence;
+CREATE SEQUENCE tema_registro_sequence;
+CREATE SEQUENCE multimedia_registro_sequence;
+CREATE SEQUENCE r_t_registro_sequence;
+CREATE SEQUENCE categoria_registro_sequence;
 
 DROP SEQUENCE rol_registro_sequence;
+DROP SEQUENCE tema_registro_sequence;
+DROP SEQUENCE multimedia_sequence;
+DROP SEQUENCE respuesta_tema_sequence;
+DROP SEQUENCE categoria_sequence;
     
 CREATE OR REPLACE TRIGGER rol_registro_trg BEFORE INSERT ON rol
     FOR EACH ROW 
@@ -46,9 +54,40 @@ CREATE OR REPLACE TRIGGER u_ci_registro_trg BEFORE INSERT ON usuario_ciencia
             FROM dual;
         END;     
 
-
+CREATE OR REPLACE TRIGGER tema_registro_trg BEFORE INSERT ON tema
+    FOR EACH ROW
+        BEGIN
+            SELECT tema_registro_sequence.nextval
+            INTO :new.codigo_tema
+            FROM dual;
+        END;    
+        
+CREATE OR REPLACE TRIGGER multimedia_registro_trg BEFORE INSERT ON multimedia
+    FOR EACH ROW
+        BEGIN
+            SELECT multimedia_registro_sequence.nextval
+            INTO :new.codigo_multimedia
+            FROM dual;
+        END;            
+        
+CREATE OR REPLACE TRIGGER categoria_registro_trg BEFORE INSERT ON categoria
+    FOR EACH ROW
+        BEGIN
+            SELECT categoria_registro_sequence.nextval
+            INTO :new.codigo_categoria
+            FROM dual;
+        END;            
+ 
+ CREATE OR REPLACE TRIGGER r_t_registro_trg BEFORE INSERT ON respuesta_tema
+    FOR EACH ROW
+        BEGIN
+            SELECT r_t_registro_sequence.nextval
+            INTO :new.codigo_respuesta
+            FROM dual;
+        END;                   
+        
 DROP TRIGGER rol_registro_trg;
-
+DROP TRIGGER r_t_registro_trg;
 
 CREATE TABLE facultad (
     codigo_facultad NUMERIC NOT NULL,
@@ -139,6 +178,62 @@ CREATE TABLE usuario_ciencia(
     CONSTRAINT uci_usuario_ciencia_pk PRIMARY KEY(codigo_u_ci)
 );
 
+CREATE TABLE tema(
+    codigo_tema NUMERIC NOT NULL,
+    titulo VARCHAR2(100) NOT NULL,
+    descripcion VARCHAR2(1000) NOT NULL,
+    fecha_creacion VARCHAR(25) NOT NULL,
+    registro_usuario_creacion NUMERIC NOT NULL,
+    estado NUMERIC NOT NULL,
+    fecha_clausura VARCHAR(25),
+    registro_usuario_clausura NUMERIC,
+    razon_clausura VARCHAR(200),
+    CONSTRAINT tema_pk PRIMARY KEY(codigo_tema),
+    CONSTRAINT t_usr_creacion_fk FOREIGN KEY(registro_usuario_creacion) REFERENCES usuario(registro),
+    CONSTRAINT t_usr_clausura_fk FOREIGN KEY(registro_usuario_clausura) REFERENCES usuario(registro)
+);
+
+CREATE TABLE categoria(
+    codigo_categoria NUMERIC NOT NULL,
+    codigo_tema NUMERIC NOT NULL,
+    codigo_facultad NUMERIC,
+    codigo_carrera NUMERIC,
+    codigo_ciencia NUMERIC,
+    estado NUMERIC NOT NULL,
+    CONSTRAINT categoria_pk PRIMARY KEY(codigo_categoria, codigo_tema),
+    CONSTRAINT cat_facultad_fk FOREIGN KEY(codigo_facultad) REFERENCES facultad(codigo_facultad),
+    CONSTRAINT cat_carrera_fk FOREIGN KEY(codigo_carrera) REFERENCES carrera(codigo_carrera),
+    CONSTRAINT cat_ciencia_fk FOREIGN KEY(codigo_ciencia) REFERENCES ciencia(codigo_ciencia)
+);
+
+DROP TABLE categoria;
+
+CREATE TABLE respuesta_tema(
+    codigo_respuesta NUMERIC NOT NULL,
+    contenido VARCHAR2(1000) NULL,
+    codigo_tema NUMERIC NOT NULL,
+    registro_usuario NUMERIC NOT NULL,
+    estado NUMERIC NOT NULL,
+    CONSTRAINT respuesta_tema_pk PRIMARY KEY(codigo_respuesta) ,
+    CONSTRAINT r_t_tema FOREIGN KEY(codigo_tema) REFERENCES tema(codigo_tema),
+    CONSTRAINT r_t_usuario FOREIGN KEY(registro_usuario) REFERENCES usuario(registro)
+);
+
+DROP TABLE respuesta_tema;
+
+CREATE TABLE multimedia(
+    codigo_multimedia NUMERIC NOT NULL,
+    codigo_tema NUMERIC,
+    codigo_respuesta_tema NUMERIC,
+    contenido VARCHAR(1000) NOT NULL,
+    estado NUMERIC NOT NULL,
+    CONSTRAINT multimedia_pk PRIMARY KEY(codigo_multimedia),
+    CONSTRAINT m_tema_fk FOREIGN KEY(codigo_tema) REFERENCES tema(codigo_tema),
+    CONSTRAINT m_respuesta_tema_fk FOREIGN KEY(codigo_respuesta_tema)  REFERENCES respuesta_tema(codigo_respuesta)
+);
+
+DROP TABLE Multimedia;
+
 DROP TABLE facultad;
 DROP TABLE carrera;
 DROP TABLE ciencia;
@@ -147,6 +242,7 @@ DROP TABLE usuario;
 DROP TABLE usuario_rol;
 DROP TABLE usuario_facultad;
 DROP TABLE usuario_carrera;
+DROP TABLE tema;
 
 INSERT INTO facultad(codigo_facultad, nombre, estado) VALUES (01, 'Ingenieria', 0);
 INSERT INTO facultad(codigo_facultad, nombre, estado) VALUES (02, 'Medicina', 0);
@@ -610,13 +706,190 @@ UPDATE usuario_carrera SET estado = 0 WHERE codigo_u_ca > 0;
 UPDATE usuario_ciencia SET estado = 0 WHERE codigo_u_ci > 0;
 COMMIT;
 
-SELECT u.registro "registro" , ur.codigo_rol "rol"
+SELECT * FROM usuario_rol WHERE registro = 3;
+
+SELECT *
 FROM usuario u, usuario_rol ur
-WHERE ur.registro = 1 
-AND ur.codigo_rol = 8
+WHERE ur.registro = u.registro
+AND u.registro = 3
+AND ur.codigo_rol = 10
 AND ur.estado = 0
-AND  u.contrasenia = 'admin'
+AND  u.contrasenia = '1234'
     
+DELETE FROM tema WHERE codigo_TEMA > 0;        
+COMMIT;
+SELECT * FROM tema;    
+ROLLBACK
+
+DROP function  Crear_Tema;
+
+CREATE OR REPLACE PROCEDURE Crear_Tema(titulo_t IN VARCHAR2, descripcion_t IN VARCHAR2, registro_c IN NUMERIC)
+IS
+    BEGIN
+        INSERT INTO tema(titulo, descripcion, fecha_creacion, registro_usuario_creacion, estado) VALUES(titulo_t, descripcion_t, SYSDATE, registro_c, 0);
+    END;
+
+SELECT tema_registro_sequence.currval FROM dual;
+
+SELECT max(codigo_tema) FROM tema WHERE registro_usuario_creacion = 3;
+
+SELECT * FROM multimedia;
+
+CREATE OR REPLACE PROCEDURE Crear_Multimedia_Tema(codigo_t IN NUMERIC, contenido_m IN VARCHAR2)
+IS 
+    BEGIN
+        INSERT INTO multimedia(codigo_tema, contenido, estado) VALUES(codigo_t, contenido_m, 0);
+    END;
     
+CREATE OR REPLACE PROCEDURE Eliminar_Multimedia_Tema(codigo_m IN NUMERIC)    
+IS 
+    BEGIN 
+        UPDATE multimedia SET estado = 1 WHERE codigo_multimedia = codigo_m;
+    END;
+    
+SELECT * FROM categoria;    
+    
+CREATE OR REPLACE PROCEDURE Crear_Categoria_Facultad(codigo_t IN NUMERIC, codigo_f IN NUMERIC)
+IS 
+    BEGIN
+        INSERT INTO categoria(codigo_tema, codigo_facultad, estado) VALUES(codigo_t, codigo_f, 0);
+    END;
+    
+CREATE OR REPLACE PROCEDURE Crear_Categoria_Carrera(codigo_t IN NUMERIC, codigo_c IN NUMERIC)
+IS 
+    BEGIN
+        INSERT INTO categoria(codigo_tema, codigo_carrera, estado) VALUES(codigo_t, codigo_c, 0);
+    END;
+
+CREATE OR REPLACE PROCEDURE Crear_Categoria_Ciencia(codigo_t IN NUMERIC, codigo_c IN NUMERIC)
+IS 
+    BEGIN
+        INSERT INTO categoria(codigo_tema, codigo_ciencia, estado) VALUES(codigo_t, codigo_c, 0);
+    END;
+    
+CREATE OR REPLACE PROCEDURE Eliminar_Categoria(codigo_cat IN NUMERIC)
+IS 
+    BEGIN 
+        UPDATE categoria SET estado = 1 WHERE codigo_categoria = codigo_cat;
+    END;    
+    
+SELECT * FROM respuesta_tema;    
+
+CREATE OR REPLACE PROCEDURE Crear_Respuesta_Tema(reg_u IN NUMERIC, cod_t IN NUMERIC, contenido IN VARCHAR2)        
+IS
+    BEGIN
+        INSERT INTO respuesta_tema(registro_usuario, codigo_tema, contenido, estado) VALUES(reg_u, cod_t, contenido, 0);
+    END;
+
+DROP PROCEDURE Crear_Respuesta;
+
+SELECT * FROM tema;
+
+BEGIN
+    Crear_Tema('Lorem Ipsum 1', 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur ', 3);
+    Crear_Tema('Lorem Ipsum 2', 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur ', 3);
+END;
+COMMIT;    
+SELECT * FROM usuario;
+SELECT * FROM respuesta_tema;
+BEGIN 
+    Crear_Respuesta_Tema(2, 1, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(2, 1, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(2, 2, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+END;
+COMMIT;
+SELECT * FROM ciencia;
+SELECT * FROM carrera;
+SELECT * FROM categoria;
+BEGIN 
+    Crear_Categoria_Facultad(1,1);
+    Crear_Categoria_Carrera(1,1);   
+    Crear_Categoria_Ciencia(1,3);
+    Crear_Categoria_Facultad(2,1);
+END;
+COMMIT;
+
+BEGIN 
+    Crear_Categoria_Ciencia(1,1);
+END;
+COMMIT;
+
+BEGIN 
+    Crear_Categoria_Carrera(1,4);   
+END;
+COMMIT;
+
+
+CREATE OR REPLACE VIEW info_tema AS
+SELECT DISTINCT t.codigo_tema, u.nombre "autor", t.titulo, t.fecha_creacion, t.estado, rt."respuestas", t.descripcion "contenido"
+FROM tema t
+INNER JOIN usuario u ON t.registro_usuario_creacion = u.registro
+INNER JOIN resp_tema rt ON rt.codigo_tema = t.codigo_tema 
+WHERE t.estado = 0
+AND u.estado = 0
+
+SELECT * FROM info_tema WHERE codigo_tema = 1;
+
+
+CREATE OR REPLACE VIEW cat_facultad AS
+SELECT DISTINCT cat.codigo_categoria, cat.codigo_tema "ct_cod_tema", f.nombre "facultad"
+FROM facultad f, categoria cat
+WHERE f.codigo_facultad = cat.codigo_facultad
+AND f.estado = 0
+AND cat.estado = 0
+
+SELECT * FROM cat_facultad;
+SELECT * FROM cat_facultad WHERE "ct_cod_tema" = 1;
+
+CREATE OR REPLACE VIEW cat_carrera AS
+SELECT DISTINCT cat.codigo_categoria, cat.codigo_tema "ca_cod_tema", c.nombre "carrera"
+FROM carrera c, categoria cat
+WHERE c.codigo_carrera = cat.codigo_carrera
+AND c.estado = 0
+AND cat.estado = 0
+
+SELECT * FROM cat_carrera
+SELECT * FROM cat_carrera WHERE "ca_cod_tema" = 1;
+
+CREATE OR REPLACE VIEW cat_ciencia AS
+SELECT DISTINCT cat.codigo_categoria, cat.codigo_tema "ci_cod_tema", c.nombre "ciencia"
+FROM ciencia c, categoria cat
+WHERE c.codigo_ciencia = cat.codigo_ciencia
+AND c.estado = 0
+AND cat.estado = 0
+
+SELECT * FROM cat_ciencia
+SELECT * FROM cat_ciencia WHERE "ci_cod_tema" = 1
+
+INNER JOIN respuesta_tema rt ON rt.codigo_tema = t.codigo_tema 
+WHERE t.estado = 0
+GROUP BY t.codigo_tema
+
+CREATE OR REPLACE VIEW resp_tema AS
+SELECT rt.codigo_tema, COUNT(rt.codigo_tema) AS "respuestas"
+FROM respuesta_tema rt, tema t
+WHERE rt.codigo_tema = t.codigo_tema
+AND rt.estado = 0
+AND t.estado = 0
+GROUP BY t.codigo_tema, rt.codigo_tema;
+
+SELECT * FROM resp_tema;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

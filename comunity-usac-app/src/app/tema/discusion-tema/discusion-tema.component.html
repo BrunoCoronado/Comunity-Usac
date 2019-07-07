@@ -1,0 +1,80 @@
+<br>
+<div class="container">
+    <h1 class="panel-title-style display-5">{{ tema.TITULO }}</h1>
+    <h1 class="display-6">Por {{tema.autor}}  el {{tema.FECHA_CREACION}}</h1>
+    <ng-container *ngIf = 'tema.facultades'>
+        <div class="container">
+            <div class="row">
+                Facultades
+                <a [routerLink] = "" type="button" class="btn btn-outline-primary btn-sm tag" disabled *ngFor = 'let facultad of tema.facultades'>{{ facultad.facultad }}</a>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf = 'tema.carreras'>
+        <div class="container">
+            <div class="row">
+                Carreras
+                <a [routerLink] = "" type="button" class="btn btn-outline-primary btn-sm tag" disabled *ngFor = 'let carrera of tema.carreras'>{{ carrera.carrera }}</a>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf = 'tema.ciencias'>
+        <div class="container">
+            <div class="row">
+                Ciencias
+                <a [routerLink] = "" type="button" class="btn btn-outline-primary btn-sm tag" disabled *ngFor = 'let ciencia of tema.ciencias'>{{ ciencia.ciencia }}</a>
+            </div>
+        </div>
+    </ng-container>
+    <br>
+    <h1 class="display-6">Descripción:</h1>
+    <p class="text-xl-left text-justify">{{tema.contenido}}</p>
+    <div class="container">
+        <div class="row">
+            <ng-container *ngFor = 'let imagen of imagenes'>
+                <div class="col-md-2 col-sm2">
+                    <img class="card-img-top image-panel-facultad" src="../../../../assets/system/usaclogo.png" alt="Card image cap">
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <br>
+    <h1 class="display-6">Comentarios</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="form-group ">
+                    <label>Comentar</label>
+                    <textarea #comentario class="form-control" aria-label="With textarea" placeholder="Comentar"></textarea>
+                </div>
+            </div>
+            <div class="col-md-12 col-sm-12">
+                <button type="submit" class="btn btn-primary btn-block" (click) = 'guardarComentario(comentario.value)'>Comentar</button>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="container">
+        <div class="row">
+            <ng-container *ngFor = 'let respuesta of respuestas'>
+                <div class="col-md-12 col-sm-12">
+                        <div class="card">
+                            <div class="row">
+                                <div class="col-md-2 col-sm-2">
+                                    <img class="img-thumbnail" src="../../assets/system/usaclogo.png" alt="Card image cap">
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item"><b>{{respuesta.usuario}}</b></li>
+                                        <li class="list-group-item">{{respuesta.contenido}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+            </ng-container>
+        </div>
+    </div>
+    <br>
+</div>

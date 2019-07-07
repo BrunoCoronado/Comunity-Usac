@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ComunService } from '../../comun.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tema',
@@ -7,9 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TemaComponent implements OnInit {
 
-  constructor() { }
+  temas: any;
+
+  constructor(private data: ComunService, private router: Router) { }
 
   ngOnInit() {
+    this.data.getTemas().subscribe( data => this.temas = data )
   }
-
 }

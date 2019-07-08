@@ -21,6 +21,8 @@ const pregunta_examen = require('../controllers/examen/pregunta-examen');
 const sala = require('../controllers/examen/sala');
 const estudiante_sala = require('../controllers/examen/estudiante-sala');
 const respuesta_estudiante = require('../controllers/examen/respuesta-estudiante');
+const conversacion = require('../controllers/conversacion/conversacion');
+const mensaje_conversacion = require('../controllers/conversacion/mensaje-conversacion');
 
 router.route('/facultad/:codigo?')
     .get(facultad.get)
@@ -116,5 +118,14 @@ router.route('/estudiante-sala/:codigo?')
 
 router.route('/respuesta-estudiante/:codigo?')
     .post(respuesta_estudiante.post);
+
+router.route('/conversacion/:codigo?')
+    .get(conversacion.get)
+    .post(conversacion.post)
+    .delete(conversacion.delete);
+
+router.route('/mensaje-conversacion/:codigo?')
+    .get(mensaje_conversacion.get)
+    .post(mensaje_conversacion.post);
 
 module.exports = router;

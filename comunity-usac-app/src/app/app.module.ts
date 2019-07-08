@@ -22,6 +22,7 @@ import { ComunModule } from './comun/comun.module';
 import { CatedraticoModule } from './catedratico/catedratico.module'
 import { EstudianteModule } from './estudiante/estudiante.module'
 
+import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
@@ -46,7 +47,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     CatedraticoModule,
     CatedraticoRoutingModule,
     EstudianteModule,
-    EstudianteRoutingModule
+    EstudianteRoutingModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

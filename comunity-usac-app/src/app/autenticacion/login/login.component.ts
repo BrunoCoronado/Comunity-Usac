@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { AutenticacionService } from '../autenticacion.service';
 import { SessionStorageService } from 'ngx-webstorage';
 import { Router } from '@angular/router';
+import { ConversacionService } from 'src/app/comun/conversacion.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ export class LoginComponent implements OnInit {
 
   roles$: any;
 
-  constructor(private Data: AutenticacionService, private sessionStorage: SessionStorageService, private router: Router) { }
+  constructor(private Data: AutenticacionService, private sessionStorage: SessionStorageService, private router: Router, private conversacionService: ConversacionService) { }
 
   ngOnInit() {
     this.Data.getRoles().subscribe( data => this.roles$ = data );
@@ -28,6 +29,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['comunity-usac/administrador']);
         }else{
           this.router.navigate(['comunity-usac/comun/temas']);
+          this.Data.getUsuario(registro).subscribe( data => this.conversacionService.conectar(data) )
         }
       }else{
         console.log('error');

@@ -11,6 +11,8 @@ CREATE SEQUENCE examen_registro_sequence;
 CREATE SEQUENCE log_examen_registro_sequence;
 CREATE SEQUENCE pregunta_registro_sequence;
 CREATE SEQUENCE respuesta_registro_sequence;
+CREATE SEQUENCE conversacion_registro_sequence;
+CREATE SEQUENCE mc_registro_sequence;
 
 DROP SEQUENCE rol_registro_sequence;
 DROP SEQUENCE tema_registro_sequence;
@@ -146,7 +148,23 @@ CREATE OR REPLACE TRIGGER pe_registro_trg BEFORE INSERT ON pregunta_examen
             SELECT pe_registro_sequence.nextval
             INTO :new.codigo_pe
             FROM dual;
-        END;                          
+        END;  
+        
+CREATE OR REPLACE TRIGGER conversacion_registro_trg BEFORE INSERT ON conversacion
+    FOR EACH ROW
+        BEGIN
+            SELECT conversacion_registro_sequence.nextval
+            INTO :new.codigo_conversacion
+            FROM dual;
+        END;           
+
+CREATE OR REPLACE TRIGGER mc_registro_trg BEFORE INSERT ON mensaje_conversacion
+    FOR EACH ROW
+        BEGIN
+            SELECT mc_registro_sequence.nextval
+            INTO :new.codigo_mensaje
+            FROM dual;
+        END;       
 
 DROP TRIGGER pr_registro_trg;     
 DROP TRIGGER pe_registro_trg;     
@@ -362,6 +380,32 @@ CREATE TABLE pregunta_examen(
     CONSTRAINT pe_examen_fk FOREIGN KEY(codigo_examen) REFERENCES examen(codigo_examen),
     CONSTRAINT pe_pregunta_fk FOREIGN KEY(codigo_pregunta) REFERENCES pregunta(codigo_pregunta)
 );
+
+CREATE TABLE conversacion(
+    codigo_conversacion NUMERIC NOT NULL,
+    registro_emisor NUMERIC NOT NULL,
+    registro_receptor NUMERIC  NOT NULL,
+    estado NUMERIC NOT NULL,
+    CONSTRAINT conversacion_pk PRIMARY KEY(codigo_conversacion),
+    CONSTRAINT c_emisor_fk FOREIGN KEY(registro_emisor) REFERENCES usuario(registro),
+    CONSTRAINT c_receptor_fk FOREIGN KEY(registro_receptor) REFERENCES usuario(registro)
+);
+
+CREATE TABLE mensaje_conversacion(
+    codigo_mensaje NUMERIC NOT NULL,
+    contenido VARCHAR(2000) NOT NULL,
+    registro_emisor NUMERIC NOT NULL,
+    registro_receptor NUMERIC NOT NULL,
+    codigo_conversacion NUMERIC NOT NULL,
+    estado NUMERIC NOT NULL,
+    CONSTRAINT mensaje_conversacion_pk PRIMARY KEY(codigo_mensaje),
+    CONSTRAINT mc_emisor_fk FOREIGN KEY(registro_emisor) REFERENCES usuario(registro),
+    CONSTRAINT mc_receptor_fk FOREIGN KEY(registro_receptor) REFERENCES usuario(registro),
+    CONSTRAINT mc_conversacion_fk FOREIGN KEY(codigo_conversacion) REFERENCES conversacion(codigo_conversacion)
+);
+
+DROP TABLE mensaje_conversacion;
+
 
 DROP TABLE pregunta_examen;
 
@@ -1217,9 +1261,46 @@ IS
 DROP PROCEDURE eliminar_pregunta_examen;        
 
 
+SELECT * FROM conversacion;
+SELECT * FROM mensaje_conversacion;
 
+UPDATE conversacion SET estado = 0 WHERE codigo_conversacion > 0;
+COMMIT;
 
+CREATE OR REPLACE PROCEDURE crear_conversacion(reg_e IN NUMERIC, reg_r IN NUMERIC)
+IS
+    BEGIN
+        INSERT INTO conversacion(registro_emisor, registro_receptor, estado) VALUES(reg_e, reg_r, 0);
+    END;
+    
+SELECT MAX(codigo_conversacion) "codigo_conversacion" FROM conversacion WHERE registro_emisor = 1 AND registro_receptor = 1;
+    
+CREATE OR REPLACE PROCEDURE eliminar_conversacion(cod_c IN NUMERIC)    
+IS
+    BEGIN
+        UPDATE conversacion SET estado = 1 WHERE codigo_conversacion = cod_c;    
+        UPDATE mensaje_conversacion SET estado = 1 WHERE codigo_conversacion = cod_c;
+    END;
+    
+CREATE OR REPLACE PROCEDURE crear_mensaje(reg_e IN NUMERIC, reg_r IN NUMERIC, cod_c IN NUMERIC, cont IN VARCHAR2)
+IS
+    BEGIN
+        INSERT INTO mensaje_conversacion(registro_emisor, registro_receptor, codigo_conversacion, contenido, estado) VALUES(reg_e, reg_r, cod_c, cont, 0);
+    END;
 
+CREATE OR REPLACE VIEW info_conversaciones AS        
+SELECT c.codigo_conversacion, c.registro_emisor, e.nombre  "emisor", c.registro_receptor, r.nombre "receptor"
+FROM conversacion c
+INNER JOIN usuario e ON c.registro_emisor = e.registro AND e.estado = 0
+INNER JOIN usuario r ON c.registro_receptor = r.registro AND r.estado = 0
+AND c.estado = 0;
+
+SELECT * FROM info_conversaciones WHERE registro_emisor = 3 OR registro_receptor = 3;
+
+SELECT COUNT(codigo_mensaje)
+FROM mensaje_conversacion
+WHERE estado = 0
+ORDER BY(codigo_conversacion);
 
 
 

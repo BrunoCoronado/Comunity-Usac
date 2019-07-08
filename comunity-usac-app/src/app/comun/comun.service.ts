@@ -59,4 +59,25 @@ export class ComunService {
   postRespuesta(body){
     return this.http.post(`http://localhost:3000/comunity-usac/api/tema-respuesta/`, body);
   }
+
+  getConversaciones(registro){
+    return this.http.get(`http://localhost:3000/comunity-usac/api/conversacion/${registro}`);
+  }
+
+  postConversacion(body){
+    return this.http.post(`http://localhost:3000/comunity-usac/api/conversacion/`, body);
+  }
+
+  deleteConversacion(codigo){
+    return this.http.delete(`http://localhost:3000/comunity-usac/api/conversacion/${codigo}`);
+  }
+
+  getMensajeConversacion(codigo){
+    return this.http.get(`http://localhost:3000/comunity-usac/api/mensaje-conversacion/${codigo}`);
+  }
+
+  postMensajeConversacion(body){
+    return this.http.post(`http://localhost:3000/comunity-usac/api/mensaje-conversacion`, body);
+  }
+
 }

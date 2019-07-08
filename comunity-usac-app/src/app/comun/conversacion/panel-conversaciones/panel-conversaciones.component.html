@@ -1,0 +1,62 @@
+<br>
+<div class="container">
+    <div class="row">
+        <h1 class="panel-title-style display-5">Panel Conversaciones</h1>
+    </div>
+</div>
+<br>
+<div class="container">
+    <div class="row">
+        <h1 class="panel-title-style display-6">Usuarios Activos</h1>
+    </div>
+    <div class="row">
+        <ng-container *ngFor = 'let usuario of conectados'>
+            <ng-container *ngIf = "sessionStorage.retrieve('usr').registro != usuario.registro">
+                <div class="col-md-3 col-sm-6 col-12">
+                    <div class="card border-success">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-2">
+                                <img class="img-thumbnail" src="../../assets/system/usaclogo.png">
+                            </div>
+                            <div class="col-md-8 col-sm-8 col-10">
+                                <p>{{usuario.nombre}}</p>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted border-success">
+                            <button class="btn btn-primary btn-block" (click) = 'crearConversacion(usuario.registro)'>Conversar</button>
+                        </div>
+                    </div>
+                    <br>
+                </div>        
+            </ng-container>
+        </ng-container>
+    </div>
+    <div class="row">
+        <h1 class="panel-title-style display-6">Conversaciones</h1>
+    </div>
+    <div class="row">
+        <ng-container *ngFor = 'let conversacion of conversaciones'>
+            <div class="col-md-3 col-sm-4 col-6">
+                <div class="card">
+                    <div class="card-header">
+                        <ng-container *ngIf = "sessionStorage.retrieve('usr').registro == conversacion.REGISTRO_EMISOR; else notEmisor">
+                            {{ conversacion.receptor }}
+                        </ng-container>
+                        <ng-template #notEmisor>
+                            {{ conversacion.emisor }}
+                        </ng-template>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-warning btn-block" (click) = 'eliminarConversacion(conversacion.CODIGO_CONVERSACION)'>Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+<ng-container [ngSwitch] = "sessionStorage.retrieve('usr').rol">
+    <ng-container *ngSwitchCase = '9'>
+    </ng-container>
+    <ng-container *ngSwitchCase = '10'>
+    </ng-container>
+</ng-container>

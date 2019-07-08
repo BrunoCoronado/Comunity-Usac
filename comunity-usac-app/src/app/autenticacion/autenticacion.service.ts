@@ -15,4 +15,8 @@ export class AutenticacionService {
   autenticar(body){
     return this.http.post('http://localhost:3000/comunity-usac/api/autenticar', body);
   }
+
+  getUsuario(registro){
+    return this.http.get(`http://localhost:3000/comunity-usac/api/usuario/${registro}`); 
+  }
 }

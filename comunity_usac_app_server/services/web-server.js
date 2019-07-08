@@ -5,6 +5,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const webServerConfig = require('../config/web-server');
 const router = require('./router');
+const socketIO = require('../services/socketIO');
 
 let httpServer;
 
@@ -12,24 +13,21 @@ function initialize(){
     return new Promise((resolve, reject) =>{
         const app = express();
         app.options('*', cors())
-        app.use( (req, res, next) => {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-            next();
-        });
+        app.use( (req, res, next) => { res.header("Access-Control-Allow-Origin", "*"); res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); next(); });
         httpServer = http.createServer(app);
         app.use(bodyParser.urlencoded({ extended: true }))
         app.use(bodyParser.json());
         app.use(morgan('dev'));
         app.use('/comunity-usac/api/', router);
+        socketIO.inicializar(httpServer);
         httpServer.listen(webServerConfig.port)
-            .on('listening', () =>{
-                console.log(`Servidor iniciado, escuchando en el puerto ${webServerConfig.port}`);
-                resolve();
-            })
-            .on('error', error => {
-                reject(error);
-            });
+        .on('listening', () =>{
+            console.log(`Servidor iniciado, escuchando en el puerto ${webServerConfig.port}`);
+            resolve();
+        })
+        .on('error', error => {
+            reject(error);
+        });
     });
 }
 

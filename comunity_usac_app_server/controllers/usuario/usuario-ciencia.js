@@ -1,5 +1,15 @@
 const usuario_ciencia = require('../../db_apis/usuario/usuario-ciencia');
 
+async function get(request, response, next){
+    try {
+        const data = { registro: parseInt(request.params.registro, 10) }
+        const rows = await usuario_ciencia.buscar(data);
+        response.status(200).json(rows);
+    } catch (error) {
+        next(error);
+    }
+}
+
 async function post(request, response, next){
     try {
         let data = { registro: request.body.registro, codigo: request.body.codigo };
@@ -26,5 +36,6 @@ async function del(request, response, next){
     }
 }
 
+module.exports.get = get;
 module.exports.post = post;
 module.exports.delete = del;

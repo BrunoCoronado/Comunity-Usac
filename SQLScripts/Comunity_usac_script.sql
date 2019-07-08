@@ -7,12 +7,19 @@ CREATE SEQUENCE tema_registro_sequence;
 CREATE SEQUENCE multimedia_registro_sequence;
 CREATE SEQUENCE r_t_registro_sequence;
 CREATE SEQUENCE categoria_registro_sequence;
+CREATE SEQUENCE examen_registro_sequence;
+CREATE SEQUENCE log_examen_registro_sequence;
+CREATE SEQUENCE pregunta_registro_sequence;
+CREATE SEQUENCE respuesta_registro_sequence;
 
 DROP SEQUENCE rol_registro_sequence;
 DROP SEQUENCE tema_registro_sequence;
 DROP SEQUENCE multimedia_sequence;
 DROP SEQUENCE respuesta_tema_sequence;
 DROP SEQUENCE categoria_sequence;
+
+DROP SEQUENCE pr_registro_sequence;
+DROP SEQUENCE pe_registro_sequence;
     
 CREATE OR REPLACE TRIGGER rol_registro_trg BEFORE INSERT ON rol
     FOR EACH ROW 
@@ -86,6 +93,64 @@ CREATE OR REPLACE TRIGGER categoria_registro_trg BEFORE INSERT ON categoria
             FROM dual;
         END;                   
         
+CREATE SEQUENCE examen_registro_sequence;
+CREATE SEQUENCE log_examen_registro_sequence;
+CREATE SEQUENCE pregunta_registro_sequence;
+CREATE SEQUENCE respuesta_registro_sequence;
+CREATE SEQUENCE pr_registro_sequence;
+CREATE SEQUENCE pe_registro_sequence;
+        
+CREATE OR REPLACE TRIGGER examen_registro_trg BEFORE INSERT ON examen
+    FOR EACH ROW
+        BEGIN
+            SELECT examen_registro_sequence.nextval
+            INTO :new.codigo_examen
+            FROM dual;
+        END;                           
+ 
+ CREATE OR REPLACE TRIGGER log_examen_registro_trg BEFORE INSERT ON log_examen
+    FOR EACH ROW
+        BEGIN
+            SELECT log_examen_registro_sequence.nextval
+            INTO :new.codigo_log_examen
+            FROM dual;
+        END;                                  
+  
+CREATE OR REPLACE TRIGGER pregunta_registro_trg BEFORE INSERT ON pregunta
+    FOR EACH ROW
+        BEGIN
+            SELECT pregunta_registro_sequence.nextval
+            INTO :new.codigo_pregunta
+            FROM dual;
+        END;                                        
+ 
+CREATE OR REPLACE TRIGGER respuesta_registro_trg BEFORE INSERT ON respuesta
+    FOR EACH ROW
+        BEGIN
+            SELECT respuesta_registro_sequence.nextval
+            INTO :new.codigo_respuesta
+            FROM dual;
+        END;                                        
+
+CREATE OR REPLACE TRIGGER pr_registro_trg BEFORE INSERT ON pregunta_respuesta
+    FOR EACH ROW
+        BEGIN
+            SELECT pr_registro_sequence.nextval
+            INTO :new.codigo_pr
+            FROM dual;
+        END;                    
+        
+CREATE OR REPLACE TRIGGER pe_registro_trg BEFORE INSERT ON pregunta_examen
+    FOR EACH ROW
+        BEGIN
+            SELECT pe_registro_sequence.nextval
+            INTO :new.codigo_pe
+            FROM dual;
+        END;                          
+
+DROP TRIGGER pr_registro_trg;     
+DROP TRIGGER pe_registro_trg;     
+            
 DROP TRIGGER rol_registro_trg;
 DROP TRIGGER r_t_registro_trg;
 
@@ -231,6 +296,74 @@ CREATE TABLE multimedia(
     CONSTRAINT m_tema_fk FOREIGN KEY(codigo_tema) REFERENCES tema(codigo_tema),
     CONSTRAINT m_respuesta_tema_fk FOREIGN KEY(codigo_respuesta_tema)  REFERENCES respuesta_tema(codigo_respuesta)
 );
+
+CREATE TABLE examen(
+    codigo_examen NUMERIC NOT NULL,
+    titulo VARCHAR2(250) NOT NULL,
+    tema VARCHAR2(250) NOT NULL,
+    fecha_creacion VARCHAR2(50) NOT NULL,
+    codigo_usuario_ciencia NUMERIC NOT NULL,
+    estado NUMERIC NOT NULL,
+    CONSTRAINT examen_pk PRIMARY KEY(codigo_examen),
+    CONSTRAINT uci_examen_fk FOREIGN KEY(codigo_usuario_ciencia) REFERENCES usuario_ciencia(codigo_u_ci)
+);
+
+CREATE TABLE log_examen(
+    codigo_log_examen NUMERIC NOT NULL,
+    codigo_examen NUMERIC NOT NULL,
+    fecha_modificacion VARCHAR2(75),
+    CONSTRAINT log_examen_pk PRIMARY KEY(codigo_log_examen),
+    CONSTRAINT log_examen_fk FOREIGN KEY(codigo_examen) REFERENCES examen(codigo_examen)
+);
+
+CREATE TABLE pregunta(
+    codigo_pregunta NUMERIC NOT NULL,
+    contenido VARCHAR2(500) NOT NULL,
+    tipo NUMERIC NOT NULL,
+    codigo_examen NUMERIC NOT NULL,
+    estado NUMERIC NOT NULL,
+    CONSTRAINT pregunta_pk PRIMARY KEY(codigo_pregunta),
+    CONSTRAINT pe_fk FOREIGN KEY(codigo_examen) REFERENCES examen(codigo_examen)
+);
+
+DROP TABLE pregunta;
+
+CREATE TABLE respuesta(
+    codigo_respuesta NUMERIC NOT NULL,
+    contenido VARCHAR2(500) NOT NULL,
+    valor NUMERIC NOT NULL,
+    codigo_pregunta NUMERIC NOT NULL,
+    estado NUMERIC NOT NULL,
+    CONSTRAINT respuesta_pk PRIMARY KEY(codigo_respuesta),
+    CONSTRAINT pr_fk FOREIGN KEY(codigo_pregunta) REFERENCES pregunta(codigo_pregunta)
+);
+
+DROP TABLE respuesta;
+
+CREATE TABLE pregunta_respuesta(
+    codigo_pr NUMERIC NOT NULL,
+    codigo_pregunta NUMERIC NOT NULL,
+    codigo_respuesta NUMERIC NOT NULL,
+    valor NUMERIC NOT NULL,
+    estado NUMERIC NOT NULL,
+    CONSTRAINT pr_pk PRIMARY KEY(codigo_pr),
+    CONSTRAINT pr_pregunta_fk FOREIGN KEY(codigo_pregunta) REFERENCES pregunta(codigo_pregunta),
+    CONSTRAINT pr_respuesta_fk FOREIGN KEY(codigo_respuesta) REFERENCES respuesta(codigo_respuesta)
+);
+
+DROP TABLE pregunta_respuesta;
+
+CREATE TABLE pregunta_examen(
+    codigo_pe NUMERIC NOT NULL,
+    codigo_examen NUMERIC NOT NULL,
+    codigo_pregunta NUMERIC NOT NULL,
+    estado NUMERIC NOT NULL,
+    CONSTRAINT pe_pk PRIMARY KEY(codigo_pe),
+    CONSTRAINT pe_examen_fk FOREIGN KEY(codigo_examen) REFERENCES examen(codigo_examen),
+    CONSTRAINT pe_pregunta_fk FOREIGN KEY(codigo_pregunta) REFERENCES pregunta(codigo_pregunta)
+);
+
+DROP TABLE pregunta_examen;
 
 DROP TABLE Multimedia;
 
@@ -824,11 +957,11 @@ CREATE OR REPLACE VIEW info_tema AS
 SELECT DISTINCT t.codigo_tema, u.nombre "autor", t.titulo, t.fecha_creacion, t.estado, rt."respuestas", t.descripcion "contenido"
 FROM tema t
 INNER JOIN usuario u ON t.registro_usuario_creacion = u.registro
-INNER JOIN resp_tema rt ON rt.codigo_tema = t.codigo_tema 
+LEFT JOIN resp_tema rt ON rt.codigo_tema = t.codigo_tema 
 WHERE t.estado = 0
 AND u.estado = 0
 
-SELECT * FROM info_tema WHERE codigo_tema = 1;
+SELECT * FROM info_tema;
 
 
 CREATE OR REPLACE VIEW cat_facultad AS
@@ -868,18 +1001,220 @@ GROUP BY t.codigo_tema
 CREATE OR REPLACE VIEW resp_tema AS
 SELECT rt.codigo_tema, COUNT(rt.codigo_tema) AS "respuestas"
 FROM respuesta_tema rt, tema t
-WHERE rt.codigo_tema = t.codigo_tema
+WHERE rt.codigo_tema = t.codigo_tema 
+AND rt.estado = 0
+AND t.estado = 0
+GROUP BY t.codigo_tema, rt.codigo_tema;
+
+SELECT rt.codigo_tema, COUNT(rt.codigo_tema) AS "respuestas"
+FROM respuesta_tema rt
+RIGHT JOIN tema t ON rt.codigo_tema = t.codigo_tema 
 AND rt.estado = 0
 AND t.estado = 0
 GROUP BY t.codigo_tema, rt.codigo_tema;
 
 SELECT * FROM resp_tema;
 
+SELECT contenido FROM multimedia;
+SELECT contenido FROM multimedia WHERE codigo_tema = 3 AND estado = 0;
+
+
+SELECT * FROM TEMA
+UPDATE tema SET descripcion = 'Lorem adipisicing anim sunt eu laborum do. Eu ad amet proident non. Magna minim mollit id consequat dolor sunt reprehenderit incididunt eiusmod consectetur Lorem. Sunt l' where codigo_tema = 4;
+commit;
+
+BEGIN
+    Crear_Multimedia_Tema(1, './profile.png');
+    Crear_Multimedia_Tema(1, './profile.png');
+    Crear_Multimedia_Tema(1, './profile.png');
+    Crear_Multimedia_Tema(2, './profile.png');
+    Crear_Multimedia_Tema(2, './profile.png');
+    Crear_Multimedia_Tema(2, './profile.png');
+    Crear_Multimedia_Tema(3, './profile.png');
+    Crear_Multimedia_Tema(3, './profile.png');
+    Crear_Multimedia_Tema(3, './profile.png');
+    Crear_Multimedia_Tema(4, './profile.png');
+    Crear_Multimedia_Tema(4, './profile.png');
+    Crear_Multimedia_Tema(4, './profile.png');
+    Crear_Multimedia_Tema(5, './profile.png');
+    Crear_Multimedia_Tema(5, './profile.png');
+    Crear_Multimedia_Tema(5, './profile.png');
+    Crear_Multimedia_Tema(6, './profile.png');
+    Crear_Multimedia_Tema(6, './profile.png');
+    Crear_Multimedia_Tema(6, './profile.png');
+END;
+COMMIT;
+
+SELECT * FROM respuesta_tema WHERE codigo_tema = 1 AND estado = 0;
+SELECT * FROM usuario;
+
+
+SELECT * FROM tema
+
+CREATE OR REPLACE PROCEDURE Crear_Respuesta_Tema(reg_u IN NUMERIC, cod_t IN NUMERIC, contenido IN VARCHAR2)        
 
 
 
+BEGIN
+    Crear_Respuesta_Tema(3,1, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,2, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,3, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,4, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,5, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,6, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,1, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,2, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(2,3, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(2,4, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(2,5, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(2,6, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(2,1, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,2, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,3, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(2,4, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,5, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(2,6, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+END;
+COMMIT;
+
+DELETE from respuesta_tema WHERE registro_usuario = 1
+COMMIT;
+SELECT * FROM respuesta_tema WHERE codigo_tema = 1 AND estado = 0;
 
 
+BEGIN
+    Crear_Respuesta_Tema(3,1, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,2, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,3, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,4, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,5, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,6, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,1, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,2, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,2, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,3, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+    Crear_Respuesta_Tema(3,5, 'Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non proident magna veniam quis. Proident id Lorem minim culpa pariatur id amet Lorem ad. Sint et non non anim. Minim incididunt dolore aliquip exercitation ea et nostrud non');
+END;
+
+SELECT * FROM rol
+
+CREATE OR REPLACE VIEW comentarios_tema AS
+SELECT u.nombre "usuario", u.fotografia "fotografia", rt.contenido "contenido", rt.codigo_tema
+FROM usuario u
+INNER JOIN respuesta_tema rt ON u.registro = rt.registro_usuario
+WHERE rt.estado = 0
+AND u.estado = 0
+
+SELECT * FROM comentarios_tema WHERE codigo_tema = 1
+
+SELECT * FROM examen;
+SELECT * FROM pregunta;
+SELECT * FROM respuesta;
+
+
+SELECT * FROM usuario_ciencia;
+SELECT * FROM ciencia
+
+CREATE OR REPLACE VIEW listado_usuario_ciencia AS
+SELECT c.nombre, uci.codigo_u_ci, uci.registro
+FROM usuario_ciencia uci
+INNER JOIN ciencia c ON uci.codigo_ciencia = c.codigo_ciencia
+WHERE uci.estado = 0
+AND c.estado = 0;
+
+SELECT * FROM listado_usuario_ciencia WHERE registro = 3;
+
+
+SELECT * FROM usuario_ciencia;
+
+CREATE OR REPLACE PROCEDURE crear_examen(titulo_e IN VARCHAR2, tema_e IN VARCHAR2, cod_uci_e IN NUMERIC)
+IS 
+    BEGIN
+        INSERT INTO examen(titulo, tema, fecha_creacion, codigo_usuario_ciencia, estado) VALUES(titulo_e, tema_e, SYSDATE, cod_uci_e, 0);
+    END;
+    
+SELECT max(codigo_examen) "codigo_examen" FROM examen WHERE codigo_usuario_ciencia = 1;
+
+CREATE OR REPLACE PROCEDURE eliminar_examen(cod_e IN NUMERIC)
+IS
+    BEGIN 
+        UPDATE examen SET estado = 1 WHERE codigo_examen = cod_e;
+    END;
+    
+CREATE OR REPLACE PROCEDURE insertar_log_examen(cod_e IN NUMERIC)    
+IS
+    BEGIN 
+        INSERT INTO log_examen(codigo_examen, fecha_modificacion) VALUES(cod_e, SYSDATE);
+    END;
+
+CREATE OR REPLACE PROCEDURE actualizar_examen(cod_e IN NUMERIC, titulo_e IN VARCHAR, tema_e IN VARCHAR2, cod_uci_e IN NUMERIC)
+IS
+    BEGIN
+        UPDATE examen SET titulo = titulo_e, tema = tema_e, codigo_usuario_ciencia = cod_uci_e WHERE codigo_examen = cod_e;
+    END;
+
+SELECT * FROM pregunta;
+
+CREATE OR REPLACE PROCEDURE crear_pregunta(tipo_p IN NUMERIC, contenido_p IN VARCHAR2, codigo_e IN NUMERIC)
+IS 
+    BEGIN
+        INSERT INTO pregunta(contenido, tipo, codigo_examen, estado) VALUES(contenido_p, tipo_p, codigo_e, 0);
+    END;
+
+SELECT max(codigo_pregunta) "codigo_pregunta" FROM pregunta WHERE codigo_examen = 1;
+
+CREATE OR REPLACE PROCEDURE eliminar_pregunta(codigo_p IN NUMERIC)
+IS
+    BEGIN
+        UPDATE pregunta SET estado = 1 WHERE codigo_pregunta = codigo_p;
+    END;
+
+SELECT * FROM respuesta
+
+CREATE OR REPLACE PROCEDURE crear_respuesta(contenido_r IN VARCHAR2, codigo_p IN NUMERIC, valor_r IN NUMERIC)
+IS 
+    BEGIN
+        INSERT INTO respuesta(contenido, codigo_pregunta, valor, estado) VALUES(contenido_r, codigo_p, valor_r, 0);
+    END;
+
+CREATE OR REPLACE PROCEDURE eliminar_respuesta(codigo_r IN NUMERIC)
+IS
+    BEGIN
+        UPDATE respuesta SET estado = 1 WHERE codigo_respuesta = codigo_r;
+    END;
+
+
+CREATE OR REPLACE PROCEDURE crear_pregunta_respuesta(codigo_p IN NUMERIC, codigo_r IN NUMERIC, valor_r IN NUMERIC)
+IS
+    BEGIN
+        INSERT INTO pregunta_respuesta(codigo_pregunta, codigo_respuesta, valor, estado) VALUES(codigo_p, codigo_r, valor_r, 0);
+    END;
+    
+DROP PROCEDURE crear_pregunta_respuesta;
+
+CREATE OR REPLACE PROCEDURE eliminar_pregunta_respuesta(cod_pr IN NUMERIC)
+IS 
+    BEGIN
+        UPDATE pregunta_respuesta SET estado = 0 WHERE codigo_pr = cod_pr;
+    END;
+    
+DROP PROCEDURE eliminar_pregunta_respuesta;    
+
+CREATE OR REPLACE PROCEDURE crear_pregunta_examen(codigo_e IN NUMERIC, codigo_p IN NUMERIC)
+IS 
+    BEGIN
+        INSERT INTO pregunta_examen(codigo_examen, codigo_pregunta, estado) VALUES(codigo_e, codigo_p, 0);
+    END;
+    
+DROP PROCEDURE crear_pregunta_examen;        
+    
+CREATE OR REPLACE PROCEDURE eliminar_pregunta_examen(cod_pe IN NUMERIC)
+IS
+    BEGIN
+        UPDATE pregunta_examen SET estado = 1 WHERE codigo_pe = cod_pe;
+    END;
+
+DROP PROCEDURE eliminar_pregunta_examen;        
 
 
 

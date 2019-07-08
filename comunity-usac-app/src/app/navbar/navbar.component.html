@@ -7,15 +7,25 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" [ngbCollapse]="navbarCollapsed" id="navbarSupportedContent"> 
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <ng-container *ngIf = "sessionStorage.retrieve('usr')">
-                        <ng-container *ngIf = "sessionStorage.retrieve('usr').rol != 8">
-                            <a class="nav-link text-white" href = "comunity-usac/comun/perfil">Perfil</a>
-                        </ng-container>
+        <ng-container *ngIf = "sessionStorage.retrieve('usr')">
+            <ul class="navbar-nav mr-auto">
+                <ng-container *ngIf = "sessionStorage.retrieve('usr').rol != 8">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href = "comunity-usac/comun/perfil">Perfil</a>
+                    </li>
                 </ng-container>
-            </li>
-        </ul>
+                <ng-container *ngIf = "sessionStorage.retrieve('usr').rol == 10">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href = "comunity-usac/catedratico/examenes">Examenes</a>
+                    </li>
+                </ng-container>
+                <ng-container *ngIf = "sessionStorage.retrieve('usr').rol == 9">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href = "comunity-usac/estudiante/examen">Acceder a Sala</a>
+                    </li>
+                </ng-container>
+            </ul>
+        </ng-container>
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a [hidden] = "!sessionStorage.retrieve('usr')" class="nav-link text-white" [routerLink] = "" (click) = "cerrarSesion()">Cerrar Sesión</a>

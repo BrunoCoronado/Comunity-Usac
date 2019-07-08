@@ -1,0 +1,66 @@
+<br>
+<ng-container [ngSwitch] = 'accion'>
+    <ng-container *ngSwitchCase = '0'>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 col-sm-12">
+                    <h1 class="panel-title-style display-3">Examenes</h1>
+                </div>
+                <div class="col-md-3 col-sm-12">
+                    <br>
+                    <a class="btn btn-primary btn-block" href = 'comunity-usac/catedratico/examen/formulario'>Crear Examen</a>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-12" *ngFor = 'let examen of examenes'>
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ examen.TITULO }}</h5>
+                                <p class="card-subtitle mb-2 text-muted">Creado el {{ examen.FECHA_CREACION }}</p>
+                                <p class="card-subtitle mb-2 text-muted">Tema: {{ examen.TEMA }}</p>
+                                <p class="card-subtitle mb-2 text-muted">Preguntas: {{ examen.preguntas }}</p>
+                            </div>
+                            <div class="card-footer text-muted">
+                                <button class="btn btn-primary btn-block" >Ver Examen</button>
+                                <button class="btn btn-primary btn-block" (click) = 'cambiarALanzarExamen(examen.CODIGO_EXAMEN)'>Lanzar Examen</button>
+                            </div>
+                        </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngSwitchCase = '1'>
+        <div class="container">
+            <div class="row">
+                <h1 class="panel-title-style display-3">Lanzar Examen</h1>
+            </div>
+        </div>
+        <br>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <h1 class="panel-title-style display-6">Configurar Sala</h1>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input #nombreSala type="text" class="form-control" placeholder="Nombre">
+                    </div> 
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <div class="form-group ">
+                        <label>Tiempo (minutos)</label>
+                        <input #tiempoSala type="number" class="form-control" placeholder="Tiempo">
+                    </div>
+                </div>
+                <div class="col-md-12 col-sm-12">
+                    <button type="submit" class="btn btn-primary btn-block" (click) = 'crearSala(nombreSala.value, tiempoSala.value)'>Crear Sala</button>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</ng-container>

@@ -1,0 +1,92 @@
+<br>
+<ng-container [ngSwitch] = 'accion'>
+    <ng-container *ngSwitchCase = '0'>
+        <div class="container">
+            <h1 class="panel-title-style text-center display-4">Sala</h1>
+            <div class="row justify-content-center">
+                <div class="col-md-4 col-sm-10">
+                    <div class="form-group">
+                        <input #nombreSala type="text" class="form-control" placeholder="Sala">
+                    </div> 
+                    <button type="submit" class="btn btn-primary btn-block" (click)='accederASala(nombreSala.value)'>Acceder</button>
+                </div>
+            </div>
+        </div>                
+    </ng-container>
+    <ng-container *ngSwitchCase = '1'>
+            <ng-container [ngSwitch] = 'preguntaActual.tipo'>
+                    <ng-container *ngSwitchCase = '1'>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12">
+                                        <h1 class="panel-title-style display-6">Pregunta {{ indicePregunta + 1 }}</h1>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12">
+                                        <div class="form-group">
+                                            <label>{{ preguntaActual.pregunta }}</label>
+                                            <input #respuestaTexto type="text" class="form-control" placeholder="Respuesta">
+                                        </div> 
+                                    </div>
+                                    <div class="col-md-12 col-sm-12">
+                                        <button type="submit" class="btn btn-primary btn-block" (click) = 'responderPreguntaTexto(preguntaActual.codigo, respuestaTexto.value)'>Responder</button>
+                                    </div>
+                                </div>
+                            </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase = '2'>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12">
+                                    <h1 class="panel-title-style display-6">Pregunta {{ indicePregunta + 1 }}</h1>
+                                </div>
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label>{{ preguntaActual.pregunta }}</label>
+                                        <ng-container *ngFor = 'let _respuesta of preguntaActual.respuestas; let i = index'>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="{{_respuesta.valor}}" (change)="cambioEnRespuestaMultiple(i)">
+                                                <label class="form-check-label">{{_respuesta.respuesta}}</label>
+                                            </div>
+                                        </ng-container>
+                                    </div> 
+                                </div>
+                                <div class="col-md-12 col-sm-12">
+                                    <button type="submit" class="btn btn-primary btn-block" (click) = 'responderPreguntaMultiple(preguntaActual.codigo)'>Responder</button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase = '3'>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12">
+                                    <h1 class="panel-title-style display-6">Pregunta {{ indicePregunta + 1 }}</h1>
+                                </div>
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label>{{ preguntaActual.pregunta }}</label>
+                                        <select #respuestaVerdaderoFalso class="form-control">
+                                            <option value="1">Verdadero</option>
+                                            <option value="0">Falso</option>
+                                        </select>
+                                    </div> 
+                                </div>
+                                <div class="col-md-12 col-sm-12">
+                                    <button type="submit" class="btn btn-primary btn-block" (click) = 'responderPreguntaVerdaderoFalso(preguntaActual.codigo, respuestaVerdaderoFalso.value)'>Responder</button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+            </ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase = '3'>
+        <div class="container">
+            <h1 class="panel-title-style text-center display-5">Nota {{nota}} de 100</h1>
+            <div class="row justify-content-center">
+                <div class="col-md-4 col-sm-10">
+                    <button type="submit" class="btn btn-primary btn-block" (click)='finalizarExamen()'>Finalizar</button>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</ng-container>

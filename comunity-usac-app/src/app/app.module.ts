@@ -6,6 +6,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AdministradorRoutingModule } from './administrador/administrador.routing'
 import { AutenticacionRoutingModule } from './autenticacion/autenticacion.routing'
 import { ComunRoutingModule } from './comun/comun.routing'
+import { CatedraticoRoutingModule } from './catedratico/catedratico.routing'
+import { EstudianteRoutingModule } from './estudiante/estudiante.routing'
 
 import { AppComponent } from './app.component';
 import { AppBootstrapModule } from './app-bootstrap.module';
@@ -17,6 +19,8 @@ import { AdministradorModule } from './administrador/administrador.module'
 import { AutenticacionModule } from './autenticacion/autenticacion.module';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
 import { ComunModule } from './comun/comun.module';
+import { CatedraticoModule } from './catedratico/catedratico.module'
+import { EstudianteModule } from './estudiante/estudiante.module'
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -39,6 +43,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AutenticacionRoutingModule,
     ComunModule,
     ComunRoutingModule,
+    CatedraticoModule,
+    CatedraticoRoutingModule,
+    EstudianteModule,
+    EstudianteRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

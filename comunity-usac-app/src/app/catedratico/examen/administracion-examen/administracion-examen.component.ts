@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CatedraticoService } from '../../catedratico.service';
 import { SessionStorageService } from 'ngx-webstorage';
+import { AccesoCatedraticoService } from '../../acceso-catedratico.service';
 
 @Component({
   selector: 'app-administracion-examen',
@@ -13,10 +14,11 @@ export class AdministracionExamenComponent implements OnInit {
   accion: number = 0;
   cod_examen: any;
 
-  constructor(private data: CatedraticoService, private sessionStorage: SessionStorageService) { }
+  constructor(private data: CatedraticoService, private sessionStorage: SessionStorageService, private acceso: AccesoCatedraticoService) { }
 
   ngOnInit() { 
-      this.data.getExamenes( this.sessionStorage.retrieve('usr').registro ).subscribe( data => this.examenes = data );
+    this.acceso.validarAcceso();
+    this.data.getExamenes( this.sessionStorage.retrieve('usr').registro ).subscribe( data => this.examenes = data );
   }
 
   cambiarALanzarExamen(codigo){

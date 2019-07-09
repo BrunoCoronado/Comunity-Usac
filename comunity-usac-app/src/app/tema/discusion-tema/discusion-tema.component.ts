@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComunService } from 'src/app/comun/comun.service';
 import { SessionStorageService } from 'ngx-webstorage';
+import { AccesoComunService } from 'src/app/comun/acceso-comun.service';
 
 @Component({
   selector: 'app-discusion-tema',
@@ -15,11 +16,12 @@ export class DiscusionTemaComponent implements OnInit {
   respuestas: any = [];
   @ViewChild('comentario', { static: false }) comentario: ElementRef;
 
-  constructor(private route: ActivatedRoute, private data: ComunService, private sessionStorage: SessionStorageService) { 
+  constructor(private route: ActivatedRoute, private data: ComunService, private sessionStorage: SessionStorageService, private acceso: AccesoComunService) {  
     route.params.subscribe( data => this.tema = data.codigo );
   }
 
   ngOnInit() {
+    this.acceso.validarAcceso(0);
     this.data.getTema(this.tema).subscribe( data => {
       this.tema = data[0];
       this.data.getMultimedia(this.tema.CODIGO_TEMA).subscribe( data => this.imagenes = data );

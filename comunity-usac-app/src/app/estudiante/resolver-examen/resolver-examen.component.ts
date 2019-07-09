@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { EstudianteService } from '../estudiante.service';
 import { SessionStorageService } from 'ngx-webstorage';
 import { Router } from '@angular/router';
+import { AccesoEstudianteService } from '../acceso-estudiante.service';
 
 @Component({
   selector: 'app-resolver-examen',
@@ -20,9 +21,10 @@ export class ResolverExamenComponent implements OnInit {
   codigoSala: any;
   respuestasEstudianteInfo: any = [];
 
-  constructor(private data: EstudianteService,  private sessionStorage: SessionStorageService, private router: Router) { }
+  constructor(private data: EstudianteService,  private sessionStorage: SessionStorageService, private router: Router, private acceso: AccesoEstudianteService) { }
 
   ngOnInit() {
+    this.acceso.validarAcceso();
   }
 
   accederASala(nombreSala){

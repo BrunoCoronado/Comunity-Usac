@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
     this.Data.autenticar({ registro: registro, contrasenia: contrasenia, codigo_rol: rol }).subscribe( (data: any) => {
       if(data.length == 1){
         this.sessionStorage.store('usr', { registro: registro, rol: rol });
-        if(rol == '8'){
+        if(rol == '1'){
           this.router.navigate(['comunity-usac/administrador']);
         }else{
           this.router.navigate(['comunity-usac/comun/temas']);

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { SessionStorageService } from 'ngx-webstorage';
 import { ComunService } from '../comun.service';
+import { AccesoComunService } from '../acceso-comun.service';
 
 @Component({
   selector: 'app-perfil',
@@ -13,9 +14,10 @@ export class PerfilComponent implements OnInit {
   editable$ = false;
   @ViewChild('ffotografia', { static: false }) inputFotografia: ElementRef;
 
-  constructor(private sessionStorage: SessionStorageService, private data: ComunService) { }
+  constructor(private sessionStorage: SessionStorageService, private data: ComunService, private acceso: AccesoComunService) { }
 
   ngOnInit() {  
+    this.acceso.validarAcceso(0);
     if(this.sessionStorage.retrieve('usr'))
       this.data.getUsuario(this.sessionStorage.retrieve('usr').registro).subscribe( data => this.usr = data[0] );
   }

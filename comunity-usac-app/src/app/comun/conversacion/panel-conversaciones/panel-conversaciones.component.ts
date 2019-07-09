@@ -4,6 +4,7 @@ import { SessionStorageService } from 'ngx-webstorage';
 import { ComunService } from '../../comun.service';
 import { Router } from '@angular/router';
 import { element } from 'protractor';
+import { AccesoComunService } from '../../acceso-comun.service';
 
 @Component({
   selector: 'app-panel-conversaciones',
@@ -17,15 +18,16 @@ export class PanelConversacionesComponent implements OnInit {
   grupos: any = [];
   gruposMiembro: any = [];
 
-  constructor(private conversacionService: ConversacionService, private sessionStorage: SessionStorageService, private data: ComunService, private router: Router) { }
+  constructor(private conversacionService: ConversacionService, private sessionStorage: SessionStorageService, private data: ComunService, private router: Router, private acceso: AccesoComunService) { }
 
   ngOnInit() {
+    this.acceso.validarAcceso(1);
     this.conversacionService.solicitadConectados();
     this.conversacionService.obtenerConectados().subscribe((conectados: any) => this.conectados = conectados );
     this.obtenerConversaciones();
-    if(this.sessionStorage.retrieve('usr').rol == 10){
+    if(this.sessionStorage.retrieve('usr').rol == 3){
       this.obtenerGrupos();
-    }else if(this.sessionStorage.retrieve('usr').rol == 9){
+    }else if(this.sessionStorage.retrieve('usr').rol == 2){
       this.obtenerGruposMiembro();
     }
   }

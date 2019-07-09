@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ComunService } from '../../comun.service';
 import { ConversacionService } from '../../conversacion.service';
 import { SessionStorageService } from 'ngx-webstorage';
+import { AccesoComunService } from '../../acceso-comun.service';
 
 @Component({
   selector: 'app-sala',
@@ -16,11 +17,12 @@ export class SalaComponent implements OnInit {
   grupo: any = {};
   mensajes: any = [];
 
-  constructor(private route: ActivatedRoute, private data: ComunService, private conversacionService: ConversacionService, private sessionStorage: SessionStorageService) { 
+  constructor(private route: ActivatedRoute, private data: ComunService, private conversacionService: ConversacionService, private sessionStorage: SessionStorageService, private acceso: AccesoComunService) { 
     route.params.subscribe( data => this.codigoGrupo = data.codigo );
   }
 
   ngOnInit() {
+    this.acceso.validarAcceso(1);
     this.conversacionService.obtenerMensajes().subscribe((message: any) => {
       if(message.codigo_grupo == this.codigoGrupo){
         this.mensajes.push({

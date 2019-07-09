@@ -9,7 +9,7 @@
     <div class="collapse navbar-collapse" [ngbCollapse]="navbarCollapsed" id="navbarSupportedContent"> 
         <ng-container *ngIf = "sessionStorage.retrieve('usr')">
             <ul class="navbar-nav mr-auto">
-                <ng-container *ngIf = "sessionStorage.retrieve('usr').rol != 8">
+                <ng-container *ngIf = "sessionStorage.retrieve('usr').rol != 1">
                     <li class="nav-item">
                         <a class="nav-link text-white" href = "comunity-usac/comun/perfil">Perfil</a>
                     </li>
@@ -17,16 +17,19 @@
                         <a class="nav-link text-white" href = "comunity-usac/comun/conversaciones">Conversaciones</a>
                     </li>
                 </ng-container>
-                <ng-container *ngIf = "sessionStorage.retrieve('usr').rol == 10">
+                <ng-container *ngIf = "sessionStorage.retrieve('usr').rol == 3">
                     <li class="nav-item">
                         <a class="nav-link text-white" href = "comunity-usac/catedratico/examenes">Examenes</a>
                     </li>
                 </ng-container>
-                <ng-container *ngIf = "sessionStorage.retrieve('usr').rol == 9">
+                <ng-container *ngIf = "sessionStorage.retrieve('usr').rol == 2">
                     <li class="nav-item">
                         <a class="nav-link text-white" href = "comunity-usac/estudiante/examen">Acceder a Sala</a>
                     </li>
                 </ng-container>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href = "comunity-usac/comun/estadisticas">Estadisticas</a>
+                </li>
             </ul>
         </ng-container>
         <ul class="navbar-nav">

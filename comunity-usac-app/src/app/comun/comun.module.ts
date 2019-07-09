@@ -12,9 +12,10 @@ import { ConversacionComponent } from './conversacion/conversacion/conversacion.
 import { FormsModule } from '@angular/forms';
 import { SalaComponent } from './conversacion/sala/sala.component';
 import { FormularioSalaComponent } from './conversacion/formulario-sala/formulario-sala.component';
+import { EstadisticasComponent } from './estadisticas/estadisticas.component';
 
 @NgModule({
-  declarations: [PerfilComponent, TemaComponent, FormularioTemaComponent, DiscusionTemaComponent, PanelConversacionesComponent, ConversacionComponent, SalaComponent, FormularioSalaComponent],
+  declarations: [PerfilComponent, TemaComponent, FormularioTemaComponent, DiscusionTemaComponent, PanelConversacionesComponent, ConversacionComponent, SalaComponent, FormularioSalaComponent, EstadisticasComponent],
   imports: [
     CommonModule,
     ComunRoutingModule,

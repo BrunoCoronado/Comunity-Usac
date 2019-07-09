@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CatedraticoService } from '../../catedratico.service';
 import { SessionStorageService } from 'ngx-webstorage';
 import { Router } from '@angular/router';
+import { AccesoCatedraticoService } from '../../acceso-catedratico.service';
 
 @Component({
   selector: 'app-formulario-examen',
@@ -15,10 +16,11 @@ export class FormularioExamenComponent implements OnInit {
   preguntas: any = [];
   respuestasMultiple: any = [];
 
-  constructor(private data: CatedraticoService, private sessionStorage: SessionStorageService, private router: Router) { }
+  constructor(private data: CatedraticoService, private sessionStorage: SessionStorageService, private router: Router, private acceso: AccesoCatedraticoService) { }
 
   ngOnInit() {
-      this.data.getCiencias(this.sessionStorage.retrieve('usr').registro).subscribe( data => this.ciencias = data );
+    this.acceso.validarAcceso();
+    this.data.getCiencias(this.sessionStorage.retrieve('usr').registro).subscribe( data => this.ciencias = data );
   }
 
 

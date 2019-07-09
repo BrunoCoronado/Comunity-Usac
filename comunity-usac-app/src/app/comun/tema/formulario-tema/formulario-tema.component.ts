@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ComunService } from '../../comun.service';
 import { SessionStorageService } from 'ngx-webstorage';
 import { Router } from '@angular/router';
+import { AccesoComunService } from '../../acceso-comun.service';
 
 @Component({
   selector: 'app-formulario-tema',
@@ -18,9 +19,10 @@ export class FormularioTemaComponent implements OnInit {
   cienciasC: any = [];
   fotografias: any = [];
 
-  constructor(private data: ComunService, private sessionStorage: SessionStorageService, private router: Router) { }
+  constructor(private data: ComunService, private sessionStorage: SessionStorageService, private router: Router, private acceso: AccesoComunService) { }
 
   ngOnInit() {
+    this.acceso.validarAcceso(1);
     this.data.getFacultades().subscribe( data => this.facultades = data );
     this.data.getCarreras().subscribe( data => this.carreras = data);
     this.data.getCiencias().subscribe( data => this.ciencias = data )

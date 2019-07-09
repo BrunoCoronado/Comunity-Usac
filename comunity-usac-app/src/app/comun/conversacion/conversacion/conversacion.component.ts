@@ -3,6 +3,7 @@ import { ConversacionService } from '../../conversacion.service';
 import { ComunService } from '../../comun.service';
 import { ActivatedRoute } from '@angular/router';
 import { SessionStorageService } from 'ngx-webstorage';
+import { AccesoComunService } from '../../acceso-comun.service';
 
 @Component({
   selector: 'app-conversacion',
@@ -16,11 +17,12 @@ export class ConversacionComponent implements OnInit {
   conversacion: any = {};
   codigoConversacion: any;
 
-  constructor(private conversacionService: ConversacionService, private data: ComunService, private route: ActivatedRoute, private sessionStorage: SessionStorageService) { 
+  constructor(private conversacionService: ConversacionService, private data: ComunService, private route: ActivatedRoute, private sessionStorage: SessionStorageService, private acceso: AccesoComunService) { 
     route.params.subscribe( data => this.codigoConversacion = data.codigo );
   }
 
   ngOnInit() {
+    this.acceso.validarAcceso(1);
     this.conversacionService.obtenerMensajes().subscribe((message: any) => {
         if(message.conversacion == this.conversacion.codigo_conversacion){
           this.mensajes.push({

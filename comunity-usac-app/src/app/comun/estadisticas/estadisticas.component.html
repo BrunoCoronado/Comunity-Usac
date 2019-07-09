@@ -1,0 +1,52 @@
+<br>
+<div class="container">
+    <div class="row">
+        <h1 class="panel-title-style display-5">Estadísticas</h1>
+    </div>
+</div>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-sm-12 col-12">
+            <div class="form-group">
+                <select [(ngModel)]="estadistica" class="form-control" (change)="verEstadistica()">
+                    <option [ngValue]="1">Top 3 Catedráticos con más respuestas</option>
+                    <option [ngValue]="2">Top 10 Estudiantes con más respuestas</option>
+                    <option [ngValue]="3">Top 3 Ciencias con más respuestas en temas</option>
+                    <option [ngValue]="4">Top 5 Estudiantes con más temas</option>
+                    <option [ngValue]="5">Top 5 Catedráticos con más temas</option>
+                </select>
+            </div> 
+        </div>
+    </div>
+</div>
+<br>
+<div class="container">
+    <ng-container [ngSwitch] = "estadistica">
+        <ng-container *ngSwitchCase = '1'>
+            <div class="row">
+                <h1 class="panel-title-style display-5">Top 3 Catedráticos con más respuestas</h1>
+            </div>
+        </ng-container>
+        <ng-container *ngSwitchCase = '2'>
+            <div class="row">
+                <h1 class="panel-title-style display-5">Top 10 Estudiantes con más respuestas</h1>
+            </div>
+        </ng-container>
+        <ng-container *ngSwitchCase = '3'>
+            <div class="row">
+                <h1 class="panel-title-style display-5">Top 3 Ciencias con más respuestas en temas</h1>
+            </div>
+        </ng-container>
+        <ng-container *ngSwitchCase = '4'>
+            <div class="row">
+                <h1 class="panel-title-style display-5">Top 5 Estudiantes con más temas</h1>
+            </div>
+        </ng-container>
+        <ng-container *ngSwitchCase = '5'>
+            <div class="row">
+                <h1 class="panel-title-style display-5">Top 5 Catedráticos con más temas</h1>
+            </div>
+        </ng-container>
+    </ng-container>
+</div>

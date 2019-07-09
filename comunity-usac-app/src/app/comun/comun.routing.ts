@@ -9,6 +9,7 @@ import { PanelConversacionesComponent } from './conversacion/panel-conversacione
 import { ConversacionComponent } from './conversacion/conversacion/conversacion.component'
 import { FormularioSalaComponent } from './conversacion/formulario-sala/formulario-sala.component'
 import { SalaComponent } from './conversacion/sala/sala.component'
+import { EstadisticasComponent } from './estadisticas/estadisticas.component'
 
 const routes: Routes = [
     { path: 'comunity-usac/comun/perfil', component: PerfilComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
     { path: 'comunity-usac/comun/conversacion/:codigo', component: ConversacionComponent },
     { path: 'comunity-usac/comun/conversacion/sala/formulario', component: FormularioSalaComponent },
     { path: 'comunity-usac/comun/conversacion/sala/:codigo', component: SalaComponent },
+    { path: 'comunity-usac/comun/estadisticas', component: EstadisticasComponent },
 ];
 
 @NgModule({

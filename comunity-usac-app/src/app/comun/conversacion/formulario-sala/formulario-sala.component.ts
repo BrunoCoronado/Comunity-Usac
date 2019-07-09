@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ComunService } from '../../comun.service';
 import { SessionStorageService } from 'ngx-webstorage';
 import { Router } from '@angular/router';
+import { AccesoComunService } from '../../acceso-comun.service';
 
 @Component({
   selector: 'app-formulario-sala',
@@ -15,9 +16,10 @@ export class FormularioSalaComponent implements OnInit {
   miembros: any = [];
   usuarios: any = [];
 
-  constructor(private data: ComunService, private sessionStorage: SessionStorageService, private router: Router) { }
+  constructor(private data: ComunService, private sessionStorage: SessionStorageService, private router: Router, private acceso: AccesoComunService) { }
 
   ngOnInit() {
+    this.acceso.validarAcceso(2);
     this.data.getUsuarios().subscribe( (data: any) => {
       for (let index = 0; index < data.length; index++) {
         for (let i = 0; i < data[index].roles.length; i++) {

@@ -1,0 +1,12 @@
+CREATE OR REPLACE PROCEDURE clausura_tema(cod IN NUMERIC, reg IN NUMERIC, razon IN VARCHAR2)
+IS 
+    BEGIN   
+        UPDATE tema SET estado = 2, registro_usuario_clausura = reg, razon_clausura = razon, fecha_clausura = SYSDATE WHERE codigo_tema = cod;
+    END;
+    
+CREATE OR REPLACE PROCEDURE solucionar_tema(cod IN NUMERIC, reg IN NUMERIC)
+IS 
+    BEGIN
+        UPDATE tema SET estado = 1, registro_usuario_clausura = reg, fecha_clausura = SYSDATE WHERE codigo_tema = cod;
+    END;
+    

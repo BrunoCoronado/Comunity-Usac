@@ -4,50 +4,87 @@
         <div class="col-md-9 col-sm-12">
             <h1 class="panel-title-style display-3">Temas</h1>
         </div>
-        <div class="col-md-3 col-sm-12">
-            <br>
-            <a class="btn btn-primary btn-block" href = 'comunity-usac/comun/tema/formulario'>Crear Tema</a>
-        </div>
+        <ng-container *ngIf = "sessionStorage.retrieve('usr').rol == 2 || sessionStorage.retrieve('usr').rol == 3">
+            <div class="col-md-3 col-sm-12">
+                <br>
+                <a class="btn btn-primary btn-block" href = 'comunity-usac/comun/tema/formulario'>Crear Tema</a>
+            </div>
+        </ng-container>
     </div>
 </div>
 <br>
-<div class="container">
-    <div class="row">
-        <div class="col-md-4 col-sm-12" *ngFor = 'let tema of temas'>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ tema.TITULO }}</h5>
-                        <p class="card-subtitle mb-2 text-muted">Publicado por {{ tema.autor }} el {{ tema.FECHA_CREACION }}</p>
-                        <p class="card-text">{{ tema.contenido.substr(0, 50) }} <a href = "comunity-usac/comun/tema/discucion-tema/{{tema.CODIGO_TEMA}}" class="card-link">ver más</a></p>
-                        <ng-container *ngIf = 'tema.respuestas; else noResponses'>
-                            <p class="card-subtitle mb-2 text-muted">Respuestas: {{ tema.respuestas }}</p>
-                        </ng-container>
-                        <ng-template #noResponses>
-                                <p class="card-subtitle mb-2 text-muted">Respuestas: 0</p>
-                        </ng-template>
-                    </div>
-                    <div class="card-footer text-muted">
-                        <ng-container *ngIf = 'tema.facultades.length != 0'>
-                            <div class="row">
-                                Facultades
-                                <a [routerLink] = "" type="button" class="btn btn-outline-primary btn-sm tag" disabled *ngFor = 'let facultad of tema.facultades'>{{ facultad.facultad }}</a>
+<ng-container [ngSwitch] = "accion">
+    <ng-container *ngSwitchCase = '0'>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-12" *ngFor = 'let tema of temas'>
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ tema.TITULO }}</h5>
+                                <p class="card-subtitle mb-2 text-muted">Publicado por {{ tema.autor }} el {{ tema.FECHA_CREACION }}</p>
+                                <p class="card-text">{{ tema.contenido.substr(0, 50) }} <a href = "comunity-usac/comun/tema/discucion-tema/{{tema.CODIGO_TEMA}}" class="card-link">ver más</a></p>
+                                <ng-container *ngIf = 'tema.respuestas; else noResponses'>
+                                    <p class="card-subtitle mb-2 text-muted">Respuestas: {{ tema.respuestas }}</p>
+                                </ng-container>
+                                <ng-template #noResponses>
+                                        <p class="card-subtitle mb-2 text-muted">Respuestas: 0</p>
+                                </ng-template>
+                                <ng-container *ngIf = 'tema.ESTADO == 0; else temaSolucionado'>
+                                    <ng-container *ngIf = "sessionStorage.retrieve('usr').registro == tema.registro_autor">
+                                        <button class="btn btn-success btn-sm" (click)="clausurarTema(tema.CODIGO_TEMA)">Solucionar Tema</button>
+                                    </ng-container>
+                                    <ng-container *ngIf = "sessionStorage.retrieve('usr').rol == 1">
+                                        <button class="btn btn-danger btn-sm" (click)="clausurarTema(tema.CODIGO_TEMA, tema.TITULO)">Clausurar Tema</button>
+                                    </ng-container>
+                                </ng-container>
+                                <ng-template #temaSolucionado>
+                                        <a [routerLink] = "" type="button" class="btn btn-outline-success btn-sm tag" disabled >Solucionado</a>
+                                </ng-template>
                             </div>
-                        </ng-container>
-                        <ng-container *ngIf = 'tema.carreras.length != 0'>
-                            <div class="row">
-                                Carreras
-                                <a [routerLink] = "" type="button" class="btn btn-outline-primary btn-sm tag" disabled *ngFor = 'let carrera of tema.carreras'>{{ carrera.carrera }}</a>
+                            <div class="card-footer text-muted">
+                                <ng-container *ngIf = 'tema.facultades.length != 0'>
+                                    <div class="row">
+                                        Facultades
+                                        <a [routerLink] = "" type="button" class="btn btn-outline-primary btn-sm tag" disabled *ngFor = 'let facultad of tema.facultades'>{{ facultad.facultad }}</a>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf = 'tema.carreras.length != 0'>
+                                    <div class="row">
+                                        Carreras
+                                        <a [routerLink] = "" type="button" class="btn btn-outline-primary btn-sm tag" disabled *ngFor = 'let carrera of tema.carreras'>{{ carrera.carrera }}</a>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf = 'tema.ciencias.length != 0'>
+                                    <div class="row">
+                                        Ciencias
+                                        <a [routerLink] = "" type="button" class="btn btn-outline-primary btn-sm tag" disabled *ngFor = 'let ciencia of tema.ciencias'>{{ ciencia.ciencia }}</a>
+                                    </div>
+                                </ng-container>
                             </div>
-                        </ng-container>
-                        <ng-container *ngIf = 'tema.ciencias.length != 0'>
-                            <div class="row">
-                                Ciencias
-                                <a [routerLink] = "" type="button" class="btn btn-outline-primary btn-sm tag" disabled *ngFor = 'let ciencia of tema.ciencias'>{{ ciencia.ciencia }}</a>
-                            </div>
-                        </ng-container>
-                    </div>
+                        </div>
+                    <br>
                 </div>
-            <br>
+            </div>
         </div>
-    </div>
-</div>
+    </ng-container>
+    <ng-container *ngSwitchCase = '1'>
+        <div class="container">
+            <h1 class="panel-title-style display-6">Clausurar Tema: {{ titulo_clausura }}</h1>
+            <br>
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <div class="form-group">
+                        <label>Razón</label>
+                        <input [(ngModel)]="razon" type="text" class="form-control" placeholder="Razón">
+                    </div> 
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-12">
+                    <button type="submit" class="btn btn-primary btn-block" (click) = 'clausurar()'>Clausurar</button>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</ng-container>

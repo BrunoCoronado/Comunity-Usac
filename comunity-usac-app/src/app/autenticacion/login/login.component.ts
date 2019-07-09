@@ -18,6 +18,13 @@ export class LoginComponent implements OnInit {
   constructor(private Data: AutenticacionService, private sessionStorage: SessionStorageService, private router: Router, private conversacionService: ConversacionService) { }
 
   ngOnInit() {
+    if(this.sessionStorage.retrieve('usr')){
+      if(this.sessionStorage.retrieve('usr').rol == 1){
+        this.router.navigate(['comunity-usac/administrador']);
+      }else{
+        this.router.navigate(['comunity-usac/comun/temas']);
+      }
+    }
     this.Data.getRoles().subscribe( data => this.roles$ = data );
   }
 

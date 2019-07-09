@@ -23,5 +23,17 @@ async function crear(data){
     return await database.ejecutarQuery(query, { registro: data.registro });
 }
 
+async function solucionar(data){
+    let query = `BEGIN \nsolucionar_tema(:cod_tema, :registro); \nEND;`;
+    return await database.ejecutarQuery(query, data);
+}
+
+async function clausurar(data){
+    let query = `BEGIN \nclausura_tema(:cod_tema, :registro, :razon); \nEND;`;
+    return await database.ejecutarQuery(query, data);
+}
+
 module.exports.buscar = buscar;
 module.exports.crear = crear;
+module.exports.solucionar = solucionar;
+module.exports.clausurar =  clausurar;

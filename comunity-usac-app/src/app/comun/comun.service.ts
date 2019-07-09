@@ -32,6 +32,10 @@ export class ComunService {
     return this.http.post(`http://localhost:3000/comunity-usac/api/tema/`, body);
   }
 
+  putTema(body){
+    return this.http.put(`http://localhost:3000/comunity-usac/api/tema/`, body);
+  }
+
   getFacultades(){
     return this.http.get('http://localhost:3000/comunity-usac/api/facultad/');
   } 

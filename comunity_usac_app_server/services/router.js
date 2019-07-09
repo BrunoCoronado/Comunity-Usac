@@ -79,7 +79,8 @@ router.route('/autenticar')
 
 router.route('/tema/:codigo?')
     .get(tema.get)
-    .post(tema.post);
+    .post(tema.post)
+    .put(tema.put);
 
 router.route('/tema-categoria/:codigo?')
     .post(categoria.post)

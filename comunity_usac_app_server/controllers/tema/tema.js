@@ -23,6 +23,24 @@ async function post(request, response, next){
     }
 }
 
+async function put(request, response, next){// :razon
+    try {
+        let result;
+        const data = { cod_tema: request.body.cod_tema, registro: request.body.registro }
+        if(request.body.razon){
+            data.razon = request.body.razon;
+            result = await tema.clausurar(data);
+        }else
+            result = await tema.solucionar(data);
+        if(!result.error)
+            response.status(201).end();
+        else
+            response.status(404).end();
+    } catch (error) {
+        next(error);
+    }
+}
+
 function capturarTemaBody(request){
     return {
         titulo: request.body.titulo,
@@ -54,3 +72,4 @@ function convertirResultSet(result){
 
 module.exports.get = get;
 module.exports.post = post;
+module.exports.put = put;

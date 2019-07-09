@@ -14,6 +14,10 @@ CREATE SEQUENCE respuesta_registro_sequence;
 CREATE SEQUENCE conversacion_registro_sequence;
 CREATE SEQUENCE mc_registro_sequence;
 
+CREATE SEQUENCE grupo_registro_sequence;
+CREATE SEQUENCE mg_registro_sequence;
+CREATE SEQUENCE meng_registro_sequence;
+
 DROP SEQUENCE rol_registro_sequence;
 DROP SEQUENCE tema_registro_sequence;
 DROP SEQUENCE multimedia_sequence;
@@ -29,7 +33,9 @@ CREATE OR REPLACE TRIGGER rol_registro_trg BEFORE INSERT ON rol
             SELECT rol_registro_sequence.nextval
             INTO :new.codigo_rol
             FROM dual;
-        END;           
+        END;      
+        
+DROP TRIGGER rol_registro_trg;
 
 CREATE OR REPLACE TRIGGER ca_ci_registro_trg BEFORE INSERT ON carrera_ciencia
     FOR EACH ROW    
@@ -162,6 +168,30 @@ CREATE OR REPLACE TRIGGER mc_registro_trg BEFORE INSERT ON mensaje_conversacion
     FOR EACH ROW
         BEGIN
             SELECT mc_registro_sequence.nextval
+            INTO :new.codigo_mensaje
+            FROM dual;
+        END;       
+
+CREATE OR REPLACE TRIGGER grupo_registro_trg BEFORE INSERT ON grupo_conversacion
+    FOR EACH ROW
+        BEGIN
+            SELECT grupo_registro_sequence.nextval
+            INTO :new.codigo_grupo
+            FROM dual;
+        END;       
+
+CREATE OR REPLACE TRIGGER mg_registro_trg BEFORE INSERT ON miembro_grupo
+    FOR EACH ROW
+        BEGIN
+            SELECT mg_registro_sequence.nextval
+            INTO :new.codigo_miembro
+            FROM dual;
+        END;       
+
+CREATE OR REPLACE TRIGGER meng_registro_trg BEFORE INSERT ON mensaje_grupo
+    FOR EACH ROW
+        BEGIN
+            SELECT meng_registro_sequence.nextval
             INTO :new.codigo_mensaje
             FROM dual;
         END;       
@@ -406,6 +436,39 @@ CREATE TABLE mensaje_conversacion(
 
 DROP TABLE mensaje_conversacion;
 
+CREATE TABLE grupo_conversacion(
+    codigo_grupo NUMERIC NOT NULL,
+    codigo_catedratico NUMERIC NOT NULL,
+    nombre VARCHAR2(200) NOT NULL,
+    estado NUMERIC NOT NULL,
+    CONSTRAINT gc_pk PRIMARY KEY(codigo_grupo),
+    CONSTRAINT gc_catedratico_fk FOREIGN KEY(codigo_catedratico) REFERENCES usuario(registro)
+);
+
+DROP TABLE grupo_conversacion;
+
+CREATE TABLE miembro_grupo(
+    codigo_miembro NUMERIC NOT NULL,
+    registro_estudiante NUMERIC NOT NULL,
+    codigo_grupo NUMERIC NOT NULL,
+    estado NUMERIC NOT NULL,
+    CONSTRAINT mg_pk PRIMARY KEY(codigo_miembro),
+    CONSTRAINT mg_estudiante_fk FOREIGN KEY(registro_estudiante) REFERENCES usuario(registro),
+    CONSTRAINT mg_grupo_fk FOREIGN KEY(codigo_grupo) REFERENCES grupo_conversacion(codigo_grupo)
+);
+
+DROP TABLE miembro_grupo;
+
+CREATE TABLE mensaje_grupo(
+    codigo_mensaje NUMERIC NOT NULL,
+    registro_emisor NUMERIC NOT NULL,
+    codigo_grupo NUMERIC NOT NULL,
+    contenido VARCHAR2(2000) NOT NULL,
+    estado NUMERIC NOT NULL,
+    CONSTRAINT meng_pk PRIMARY KEY(codigo_mensaje),
+    CONSTRAINT meng_emisor_fk FOREIGN KEY(registro_emisor) REFERENCES usuario(registro),
+    CONSTRAINT meng_grupo_fk FOREIGN KEY(codigo_grupo) REFERENCES grupo_conversacion(codigo_grupo)
+);
 
 DROP TABLE pregunta_examen;
 
@@ -676,6 +739,20 @@ COMMIT;
 TRUNCATE TABLE rol;
 
 SELECT * FROM rol; 
+
+SELECT * FROM usuario_rol;
+
+UPDATE rol SET estado = 1 WHERE codigo_rol = 8;
+UPDATE rol SET estado = 1 WHERE codigo_rol = 9;
+UPDATE rol SET estado = 1 WHERE codigo_rol = 10;
+COMMIT;
+UPDATE usuario_rol SET codigo_rol = 1 WHERE codigo_rol = 8
+UPDATE usuario_rol SET codigo_rol = 2 WHERE codigo_rol = 9
+UPDATE usuario_rol SET codigo_rol = 3 WHERE codigo_rol = 10
+COMMIT;
+INSERT INTO rol(codigo_rol, nombre, descripcion, estado) VALUES(1,'Administrador','Excepteur amet sit adipisicing eu aliqua aliqua sint culpa. Labore id anim cillum in magna dolor amet pariatur. Tempor mollit aliquip laborum velit consectetur elit.Excepteur amet sit adipisicing eu ', 0);
+INSERT INTO rol(codigo_rol, nombre, descripcion, estado) VALUES(2,'Estudiante', 'Excepteur amet sit adipisicing eu aliqua aliqua sint culpa. Labore id anim cillum in magna dolor amet pariatur. Tempor mollit aliquip laborum velit consectetur elit.Excepteur amet sit adipisicing eu ', 0);
+INSERT INTO rol(codigo_rol, nombre, descripcion, estado) VALUES(3,'Catedratico', 'Excepteur amet sit adipisicing eu aliqua aliqua sint culpa. Labore id anim cillum in magna dolor amet pariatur. Tempor mollit aliquip laborum velit consectetur elit.Excepteur amet sit adipisicing eu ',0);
 
 UPDATE rol SET estado = 0 WHERE codigo_rol > 0;
 COMMIT;
@@ -998,7 +1075,7 @@ COMMIT;
 
 
 CREATE OR REPLACE VIEW info_tema AS
-SELECT DISTINCT t.codigo_tema, u.nombre "autor", t.titulo, t.fecha_creacion, t.estado, rt."respuestas", t.descripcion "contenido"
+SELECT DISTINCT t.codigo_tema, u.registro "registro_autor", u.nombre "autor", t.titulo, t.fecha_creacion, t.estado, rt."respuestas", t.descripcion "contenido"
 FROM tema t
 INNER JOIN usuario u ON t.registro_usuario_creacion = u.registro
 LEFT JOIN resp_tema rt ON rt.codigo_tema = t.codigo_tema 
@@ -1297,15 +1374,111 @@ AND c.estado = 0;
 
 SELECT * FROM info_conversaciones WHERE registro_emisor = 3 OR registro_receptor = 3;
 
+SELECT * FROM info_conversaciones
+
 SELECT COUNT(codigo_mensaje)
 FROM mensaje_conversacion
 WHERE estado = 0
 ORDER BY(codigo_conversacion);
 
+SELECT * FROM mensaje_conversacion
 
+CREATE OR REPLACE VIEW mensajes_conversacion AS
+SELECT ic.codigo_conversacion, ic.registro_emisor, ic."emisor", ic.registro_receptor, ic."receptor", mc.contenido, mc.registro_emisor "remisor", mc.registro_receptor "rreceptor"
+FROM mensaje_conversacion mc
+RIGHT JOIN info_conversaciones ic ON mc.codigo_conversacion = ic.codigo_conversacion
+ORDER BY(codigo_mensaje)
 
+SELECT * FROM mensajes_conversacion WHERE codigo_conversacion = 1;
 
+DELETE FROM conversacion WHERE codigo_conversacion = 3;
 
+DELETE FROM mensaje_conversacion WHERE codigo_conversacion = 3;
+COMMIT;
 
+UPDATE conversacion SET estado = 0 WHERE codigo_conversacion > 0;
 
+SELECT * FROM conversacion;
 
+BEGIN
+    crear_mensaje(3, 2, 1, 'Hola');    
+    crear_mensaje(3, 2, 1, 'Como estas?');    
+    crear_mensaje(3, 2, 1, 'Todo bien?');    
+    crear_mensaje(2, 3, 1, 'Hola');    
+    crear_mensaje(2, 3, 1, 'Todo bien');    
+    crear_mensaje(2, 3, 1, 'Gracias');    
+END;
+COMMIT;
+
+UPDATE grupo_conversacion SET estado = 0 WHERE codigo_grupo > 0;
+UPDATE miembro_grupo SET estado = 0 WHERE codigo_grupo > 0;
+COMMIT;
+
+SELECT * FROM grupo_conversacion;
+SELECT * FROM miembro_grupo;
+SELECT * FROM mensaje_grupo;
+
+CREATE OR REPLACE PROCEDURE crear_grupo(cod_c IN NUMERIC, nom_g IN VARCHAR2)
+IS 
+    BEGIN 
+        INSERT INTO grupo_conversacion(codigo_catedratico, nombre, estado) VALUES(cod_c, nom_g, 0);
+    END;
+    
+SELECT MAX(codigo_grupo) "codigo_grupo" FROM grupo_conversacion WHERE codigo_catedratico = 1;   
+
+CREATE OR REPLACE PROCEDURE eliminar_grupo(cod_g IN NUMERIC)
+IS
+    BEGIN   
+        UPDATE grupo_conversacion SET estado = 1 WHERE codigo_grupo = cod_g;
+        UPDATE miembro_grupo SET estado = 1 WHERE codigo_grupo = cod_g;
+        UPDATE mensaje_grupo SET estado = 1 WHERE codigo_grupo = cod_g;
+    END;
+
+CREATE OR REPLACE PROCEDURE agregar_miembro_grupo(registro IN NUMERIC, cod_g IN NUMERIC)
+IS 
+    BEGIN   
+        INSERT INTO miembro_grupo(registro_estudiante, codigo_grupo, estado) VALUES(registro, cod_g, 0);
+    END;
+    
+CREATE OR REPLACE PROCEDURE eliminar_miembro_grupo(cod_m IN NUMERIC)    
+IS
+    BEGIN 
+        UPDATE miembro_grupo SET estado = 1 WHERE codigo_miembro = cod_m;
+    END;
+    
+CREATE OR REPLACE PROCEDURE agregar_mensaje_grupo(reg_e IN NUMERIC, cod_g IN NUMERIC, cont IN VARCHAR2)
+IS
+    BEGIN
+        INSERT INTO mensaje_grupo(registro_emisor, codigo_grupo, contenido, estado) VALUES(reg_e, cod_g, cont, 0);
+    END;
+    
+SELECT * FROM grupo_conversacion WHERE codigo_grupo = 1;
+
+CREATE OR REPLACE VIEW grupos_usuario AS
+SELECT g.nombre, mg.registro_estudiante, g.codigo_grupo
+FROM miembro_grupo mg
+INNER JOIN grupo_conversacion g ON mg.codigo_grupo = g.codigo_grupo AND g.estado = 0
+WHERE mg.estado = 0
+
+SELECT ic.codigo_conversacion, ic.registro_emisor, ic."emisor", ic.registro_receptor, ic."receptor", mc.contenido, mc.registro_emisor "remisor", mc.registro_receptor "rreceptor"
+FROM mensaje_conversacion mc
+RIGHT JOIN info_conversaciones ic ON mc.codigo_conversacion = ic.codigo_conversacion
+ORDER BY(codigo_mensaje)
+
+CREATE VIEW mensajes_grupo AS
+SELECT g.codigo_grupo, g.nombre, mg.registro_emisor, mg.contenido 
+FROM mensaje_grupo mg
+RIGHT JOIN grupo_conversacion g ON mg.codigo_grupo = g.codigo_grupo
+ORDER BY(mg.codigo_mensaje)
+
+SELECT * FROM mensajes_grupo WHERE codigo_grupo = 2
+
+SELECT * FROM grupos_usuario WHERE registro_estudiante = 2;
+    
+SELECT * FROM usuario_rol;
+    
+SELECT rt. 
+FROM respuesta_tema rt
+INNER JOIN usuario_rol ur ON rt.registro_usuario = ur.registro AND ur.codigo_rol = 10
+
+SELECT codigo_rol "codigo", nombre "nombre", descripcion "descripcion" FROM rol WHERE estado = 0 ORDER BY(codigo_rol)

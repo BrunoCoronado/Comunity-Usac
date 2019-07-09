@@ -23,8 +23,6 @@ export class ConversacionComponent implements OnInit {
   ngOnInit() {
     this.conversacionService.obtenerMensajes().subscribe((message: any) => {
         if(message.conversacion == this.conversacion.codigo_conversacion){
-          console.log(message);
-          console.log(this.sessionStorage.retrieve('usr'));
           this.mensajes.push({
             registro_emisor: message.emisor,
             registro_receptor: message.receptor,

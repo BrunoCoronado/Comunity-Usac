@@ -1,0 +1,58 @@
+<br>
+<div class="container">
+    <h1 class="panel-title-style text-center display-4">Crear Grupo</h1>
+    <br>
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input [(ngModel)]="nombre" type="text" class="form-control" placeholder="Nombre">
+            </div> 
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <h1 class="panel-title-style display-5">Miembros</h1>
+    </div>
+    <div class="row">
+    <div class="col-md-7 col-sm-10 col-8">
+        <div class="form-group">
+            <select [(ngModel)]="miembro" class="form-control">
+                <ng-container *ngFor = 'let usr of usuarios'>
+                    <option [ngValue]="usr">{{ usr.nombre }}</option>
+                </ng-container>
+            </select>
+        </div> 
+    </div>
+    <div class="col-md-5 col-sm-2 col-4">
+        <button type="submit" class="btn btn-primary btn-block" (click) = 'agregarMiembro()' >Agregar</button>
+    </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-12">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr class="bg-secondary">
+                            <th class="text-light" scope="col">Miembro</th>
+                            <th class="text-light" scope="col">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor = 'let _miembro of miembros; let i = index'>
+                            <td>{{ _miembro.nombre }}</td>
+                            <td><button type="submit" class="btn btn-warning btn-sm" (click) = 'eliminarMiembro(i)'>Eliminar</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-12">
+            <button type="submit" class="btn btn-primary btn-block" (click) = 'crearGrupo()'>Crear Grupo</button>
+        </div>
+    </div>
+</div>

@@ -7,7 +7,8 @@ import { FormularioTemaComponent } from './tema/formulario-tema/formulario-tema.
 import { DiscusionTemaComponent } from '../tema/discusion-tema/discusion-tema.component';
 import { PanelConversacionesComponent } from './conversacion/panel-conversaciones/panel-conversaciones.component'
 import { ConversacionComponent } from './conversacion/conversacion/conversacion.component'
-
+import { FormularioSalaComponent } from './conversacion/formulario-sala/formulario-sala.component'
+import { SalaComponent } from './conversacion/sala/sala.component'
 
 const routes: Routes = [
     { path: 'comunity-usac/comun/perfil', component: PerfilComponent },
@@ -16,6 +17,8 @@ const routes: Routes = [
     { path: 'comunity-usac/comun/tema/discucion-tema/:codigo', component: DiscusionTemaComponent },
     { path: 'comunity-usac/comun/conversaciones', component: PanelConversacionesComponent },
     { path: 'comunity-usac/comun/conversacion/:codigo', component: ConversacionComponent },
+    { path: 'comunity-usac/comun/conversacion/sala/formulario', component: FormularioSalaComponent },
+    { path: 'comunity-usac/comun/conversacion/sala/:codigo', component: SalaComponent },
 ];
 
 @NgModule({

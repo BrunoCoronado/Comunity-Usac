@@ -31,9 +31,6 @@ function manejador(socket){
     socket.on('nuevo-mensaje', (mensaje) => {
         io.emit('nuevo-mensaje', mensaje);
     });
-    socket.on('disconnect', function(){
-        console.log('user disconnected');
-    });
 }
 
 module.exports.inicializar = inicializar;

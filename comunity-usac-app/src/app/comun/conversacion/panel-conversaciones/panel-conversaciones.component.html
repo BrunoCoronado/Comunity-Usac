@@ -54,9 +54,57 @@
         </ng-container>
     </div>
 </div>
+<br>
 <ng-container [ngSwitch] = "sessionStorage.retrieve('usr').rol">
     <ng-container *ngSwitchCase = '9'>
+        <div class="container">
+            <div class="row">
+                <h1 class="panel-title-style display-6">Grupos</h1>
+            </div>
+            <div class="row">
+                <ng-container *ngFor = 'let _grupo of gruposMiembro'>
+                    <div class="col-md-3 col-sm-4 col-6">
+                        <div class="card">
+                            <div class="card-header">
+                                {{ _grupo.NOMBRE }}
+                            </div>
+                            <div class="card-body">
+                                <a class="btn btn-primary btn-block" href="comunity-usac/comun/conversacion/sala/{{_grupo.CODIGO_GRUPO}}">Conversar</a>
+                                <button class="btn btn-warning btn-block" (click) = 'abandonarGrupo(_grupo.CODIGO_GRUPO)'>Abandonar</button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <br>
     </ng-container>
     <ng-container *ngSwitchCase = '10'>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 col-sm-12 col-12">
+                    <h1 class="panel-title-style display-6">Grupos</h1>
+                </div>
+                <div class="col-md-3 col-sm-12 col-12">
+                    <a class="btn btn-primary btn-block" href="comunity-usac/comun/conversacion/sala/formulario">Crear Grupo</a>
+                </div>
+            </div>
+            <div class="row">
+                <ng-container *ngFor = 'let grupo of grupos'>
+                    <div class="col-md-3 col-sm-4 col-6">
+                        <div class="card">
+                            <div class="card-header">
+                                {{ grupo.NOMBRE }}
+                            </div>
+                            <div class="card-body">
+                                <a class="btn btn-primary btn-block" href="comunity-usac/comun/conversacion/sala/{{grupo.CODIGO_GRUPO}}">Conversar</a>
+                                <button class="btn btn-warning btn-block" (click) = 'eliminarGrupo(grupo.CODIGO_GRUPO)'>Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <br>
     </ng-container>
 </ng-container>

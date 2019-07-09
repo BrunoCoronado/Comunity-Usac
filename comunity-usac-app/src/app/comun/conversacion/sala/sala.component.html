@@ -1,0 +1,34 @@
+<br>
+<div class="container">
+    <div class="row">
+        <h1 class="panel-title-style display-5">Sala del Grupo {{ grupo.nombre_grupo }}</h1>
+    </div>
+</div>
+<br>
+<div class="container">
+    <div class="row border">
+        <div class="col-md-12 col-sm-12">
+            <ul class="list-group">
+                <ng-container *ngFor = 'let mensaje of mensajes'>
+                    <ng-container *ngIf = "mensaje.registro_emisor == sessionStorage.retrieve('usr').registro; else notMe">
+                        <li class="list-group-item list-group-item-a list-group-item-success">{{ mensaje.contenido }}</li>
+                    </ng-container>
+                    <ng-template #notMe>
+                        <li class="list-group-item list-group-item-b list-group-item-secondary">{{ mensaje.contenido }}</li>
+                    </ng-template>
+                </ng-container>
+            </ul>
+        </div>
+    </div>
+    <br>
+    <div class="row border">
+        <br>
+        <div class="col-md-12 col-sm-12">
+            <div class="form-group">
+                <input [(ngModel)]="mensaje" type="text" class="form-control" placeholder="Menjase">
+            </div> 
+            <button type="submit" class="btn btn-primary btn-block" (click) = 'enviarMensaje()'>Enviar Mensaje</button>
+        </div>
+    </div>
+</div>
+

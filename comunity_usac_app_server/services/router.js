@@ -23,6 +23,9 @@ const estudiante_sala = require('../controllers/examen/estudiante-sala');
 const respuesta_estudiante = require('../controllers/examen/respuesta-estudiante');
 const conversacion = require('../controllers/conversacion/conversacion');
 const mensaje_conversacion = require('../controllers/conversacion/mensaje-conversacion');
+const grupo = require('../controllers/conversacion/grupo/grupo');
+const miembro_grupo = require('../controllers/conversacion/grupo/miembro-grupo');
+const mensaje_grupo = require('../controllers/conversacion/grupo/mensaje-grupo');
 
 router.route('/facultad/:codigo?')
     .get(facultad.get)
@@ -127,5 +130,19 @@ router.route('/conversacion/:codigo?')
 router.route('/mensaje-conversacion/:codigo?')
     .get(mensaje_conversacion.get)
     .post(mensaje_conversacion.post);
+
+router.route('/grupo/:codigo?')
+    .get(grupo.get)
+    .post(grupo.post)
+    .delete(grupo.delete);
+
+router.route('/miembro-grupo/:codigo?')
+    .get(miembro_grupo.get)
+    .post(miembro_grupo.post)
+    .delete(miembro_grupo.delete);
+
+router.route('/mensaje-grupo/:codigo?')
+    .get(mensaje_grupo.get)
+    .post(mensaje_grupo.post);
 
 module.exports = router;

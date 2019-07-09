@@ -14,6 +14,8 @@ export class PanelConversacionesComponent implements OnInit {
 
   conectados: any = [];
   conversaciones: any = [];
+  grupos: any = [];
+  gruposMiembro: any = [];
 
   constructor(private conversacionService: ConversacionService, private sessionStorage: SessionStorageService, private data: ComunService, private router: Router) { }
 
@@ -21,10 +23,23 @@ export class PanelConversacionesComponent implements OnInit {
     this.conversacionService.solicitadConectados();
     this.conversacionService.obtenerConectados().subscribe((conectados: any) => this.conectados = conectados );
     this.obtenerConversaciones();
+    if(this.sessionStorage.retrieve('usr').rol == 10){
+      this.obtenerGrupos();
+    }else if(this.sessionStorage.retrieve('usr').rol == 9){
+      this.obtenerGruposMiembro();
+    }
   }
 
   obtenerConversaciones(){
     this.data.getConversaciones(this.sessionStorage.retrieve('usr').registro).subscribe( data => this.conversaciones = data )
+  }
+
+  obtenerGrupos(){
+    this.data.getGrupos(this.sessionStorage.retrieve('usr').registro).subscribe( data => this.grupos = data );
+  }
+
+  obtenerGruposMiembro(){
+    this.data.getMiembroGrupos(this.sessionStorage.retrieve('usr').registro).subscribe( data => this.gruposMiembro = data );
   }
 
   crearConversacion(receptor){
@@ -47,5 +62,9 @@ export class PanelConversacionesComponent implements OnInit {
   
   eliminarConversacion(codigo){
     this.data.deleteConversacion(codigo).subscribe( () => this.obtenerConversaciones() ); 
+  }
+
+  eliminarGrupo(codigo){
+    this.data.deleteGrupo(codigo).subscribe( () => this.obtenerGrupos() );
   }
 }

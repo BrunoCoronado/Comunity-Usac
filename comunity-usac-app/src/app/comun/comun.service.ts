@@ -8,6 +8,10 @@ export class ComunService {
 
   constructor(private http: HttpClient) { }
 
+  getUsuarios(){
+    return this.http.get(`http://localhost:3000/comunity-usac/api/usuario/`); 
+  }
+
   getUsuario(registro){
     return this.http.get(`http://localhost:3000/comunity-usac/api/usuario/${registro}`); 
   }
@@ -80,4 +84,31 @@ export class ComunService {
     return this.http.post(`http://localhost:3000/comunity-usac/api/mensaje-conversacion`, body);
   }
 
+  getGrupos(registro){
+    return this.http.get(`http://localhost:3000/comunity-usac/api/grupo/${registro}`);
+  }
+
+  postGrupo(body){
+    return this.http.post(`http://localhost:3000/comunity-usac/api/grupo/`, body);
+  }
+
+  deleteGrupo(codigo){  
+    return this.http.delete(`http://localhost:3000/comunity-usac/api/grupo/${codigo}`);
+  }
+
+  getMiembroGrupos(registro){
+    return this.http.get(`http://localhost:3000/comunity-usac/api/miembro-grupo/${registro}`);
+  }
+
+  postMiembroGrupo(body){
+    return this.http.post(`http://localhost:3000/comunity-usac/api/miembro-grupo/`, body);
+  }
+
+  getMensajeGrupo(codigo){
+    return this.http.get(`http://localhost:3000/comunity-usac/api/mensaje-grupo/${codigo}`);
+  }
+
+  postMensajeGrupo(body){
+    return this.http.post(`http://localhost:3000/comunity-usac/api/mensaje-grupo/`, body);
+  }
 }

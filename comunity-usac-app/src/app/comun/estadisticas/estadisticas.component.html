@@ -6,7 +6,7 @@
 </div>
 <br>
 <div class="container">
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-md-6 col-sm-12 col-12">
             <div class="form-group">
                 <select [(ngModel)]="estadistica" class="form-control" (change)="verEstadistica()">
@@ -19,34 +19,76 @@
             </div> 
         </div>
     </div>
+    <div class="row justify-content-center">
+        <ng-container *ngIf = "estadistica != 3">
+            <div class="col-md-6 col-sm-12 col-12">
+                <div class="form-group">
+                    <label>Ciencias</label>
+                    <select [(ngModel)]="ciencia" class="form-control" (change)="cambiarCiencia()">
+                        <option [ngValue]="0">General</option>
+                        <option [ngValue]="_ciencia.codigo" *ngFor = "let _ciencia of ciencias">{{ _ciencia.nombre }}</option>
+                    </select>
+                </div> 
+            </div>
+        </ng-container>
+    </div>
+</div>
+<div id="contenido">
+    <br>
+    <div class="container">
+        <h1 class="panel-title-style text-center display-5">{{ titulo }}</h1>
+    </div>
+    <br>
+    <div class="container" id="contenido">
+        <div class="row  justify-content-center">
+            <ng-container *ngIf = "estadistica != 3; else esCiencia">
+                <div class="col-md-7 col-sm-12 col-12" *ngFor = 'let info of informacion'>
+                    <div class="card border-primary text-center">
+                        <div class="row">
+                            <div class="col-md-2 col-sm-2 col-2">
+                                <img class="img-thumbnail" src="../../assets/system/usaclogo.png">
+                            </div>
+                            <div class="col-md-10 col-sm-10 col-10">
+                                <div class="card-header border-primary">
+                                    <b>{{ info.NOMBRE }}</b>
+                                </div>        
+                                <div class="card-footer border-primary">
+                                    <ng-container *ngIf = "estadistica == 1 || estadistica == 2; else noRespuestas">
+                                        <b>Respuestas: {{ info.respuestas }}</b>
+                                    </ng-container>
+                                    <ng-template #noRespuestas>
+                                        <b>Temas: {{ info.temas }}</b>
+                                    </ng-template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </ng-container>
+            <ng-template #esCiencia>
+                <div class="col-md-7 col-sm-12 col-12" *ngFor = 'let info of informacion'>
+                    <div class="card border-primary text-center">
+                        <div class="col-md-12 col-sm-12 col-12">
+                            <div class="card-header border-primary">
+                                <b>{{ info.NOMBRE }}</b>
+                            </div>        
+                            <div class="card-footer border-primary">
+                                <b>Respuestas: {{ info.respuestas }}</b>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </ng-template>
+        </div>
+    </div>
 </div>
 <br>
 <div class="container">
-    <ng-container [ngSwitch] = "estadistica">
-        <ng-container *ngSwitchCase = '1'>
-            <div class="row">
-                <h1 class="panel-title-style display-5">Top 3 Catedráticos con más respuestas</h1>
-            </div>
-        </ng-container>
-        <ng-container *ngSwitchCase = '2'>
-            <div class="row">
-                <h1 class="panel-title-style display-5">Top 10 Estudiantes con más respuestas</h1>
-            </div>
-        </ng-container>
-        <ng-container *ngSwitchCase = '3'>
-            <div class="row">
-                <h1 class="panel-title-style display-5">Top 3 Ciencias con más respuestas en temas</h1>
-            </div>
-        </ng-container>
-        <ng-container *ngSwitchCase = '4'>
-            <div class="row">
-                <h1 class="panel-title-style display-5">Top 5 Estudiantes con más temas</h1>
-            </div>
-        </ng-container>
-        <ng-container *ngSwitchCase = '5'>
-            <div class="row">
-                <h1 class="panel-title-style display-5">Top 5 Catedráticos con más temas</h1>
-            </div>
-        </ng-container>
-    </ng-container>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-12">
+            <button type="submit" class="btn btn-primary btn-block" (click) = 'generarPDF()'>Generar PDF</button>
+        </div>
+    </div>
 </div>

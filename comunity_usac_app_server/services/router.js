@@ -26,6 +26,7 @@ const mensaje_conversacion = require('../controllers/conversacion/mensaje-conver
 const grupo = require('../controllers/conversacion/grupo/grupo');
 const miembro_grupo = require('../controllers/conversacion/grupo/miembro-grupo');
 const mensaje_grupo = require('../controllers/conversacion/grupo/mensaje-grupo');
+const estadistica = require('../controllers/estadistica');
 
 router.route('/facultad/:codigo?')
     .get(facultad.get)
@@ -145,5 +146,8 @@ router.route('/miembro-grupo/:codigo?')
 router.route('/mensaje-grupo/:codigo?')
     .get(mensaje_grupo.get)
     .post(mensaje_grupo.post);
+
+router.route('/estadistica/:tipo/:rol?/:ciencia?')
+    .get(estadistica.get);
 
 module.exports = router;

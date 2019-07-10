@@ -115,4 +115,13 @@ export class ComunService {
   postMensajeGrupo(body){
     return this.http.post(`http://localhost:3000/comunity-usac/api/mensaje-grupo/`, body);
   }
+
+  getEstadistica(tipo, rol = 0, ciencia = 0){
+    if(rol != 0){
+      if(ciencia != 0)
+        return this.http.get(`http://localhost:3000/comunity-usac/api/estadistica/${tipo}/${rol}/${ciencia}`);    
+      return this.http.get(`http://localhost:3000/comunity-usac/api/estadistica/${tipo}/${rol}`);    
+    }
+    return this.http.get(`http://localhost:3000/comunity-usac/api/estadistica/${tipo}`);
+  }
 }

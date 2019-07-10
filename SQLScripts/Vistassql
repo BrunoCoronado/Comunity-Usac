@@ -1,0 +1,69 @@
+CREATE OR REPLACE VIEW info_tema AS
+SELECT DISTINCT t.codigo_tema, u.registro "registro_autor", u.nombre "autor", t.titulo, t.fecha_creacion, t.estado, rt."respuestas", t.descripcion "contenido"
+FROM tema t
+INNER JOIN usuario u ON t.registro_usuario_creacion = u.registro
+LEFT JOIN resp_tema rt ON rt.codigo_tema = t.codigo_tema 
+WHERE t.estado = 0 OR t.estado = 1
+AND u.estado = 0 
+
+SELECT * FROM info_tema;
+
+
+CREATE OR REPLACE VIEW cat_facultad AS
+SELECT DISTINCT cat.codigo_categoria, cat.codigo_tema "ct_cod_tema", f.nombre "facultad"
+FROM facultad f, categoria cat
+WHERE f.codigo_facultad = cat.codigo_facultad
+AND f.estado = 0
+AND cat.estado = 0
+
+SELECT * FROM cat_facultad;
+SELECT * FROM cat_facultad WHERE "ct_cod_tema" = 1;
+
+CREATE OR REPLACE VIEW cat_carrera AS
+SELECT DISTINCT cat.codigo_categoria, cat.codigo_tema "ca_cod_tema", c.nombre "carrera"
+FROM carrera c, categoria cat
+WHERE c.codigo_carrera = cat.codigo_carrera
+AND c.estado = 0
+AND cat.estado = 0
+
+SELECT * FROM cat_carrera
+SELECT * FROM cat_carrera WHERE "ca_cod_tema" = 1;
+
+CREATE OR REPLACE VIEW cat_ciencia AS
+SELECT DISTINCT cat.codigo_categoria, cat.codigo_tema "ci_cod_tema", c.nombre "ciencia"
+FROM ciencia c, categoria cat
+WHERE c.codigo_ciencia = cat.codigo_ciencia
+AND c.estado = 0
+AND cat.estado = 0
+
+SELECT * FROM cat_ciencia
+SELECT * FROM cat_ciencia WHERE "ci_cod_tema" = 1
+
+INNER JOIN respuesta_tema rt ON rt.codigo_tema = t.codigo_tema 
+WHERE t.estado = 0 
+GROUP BY t.codigo_tema
+
+CREATE OR REPLACE VIEW resp_tema AS
+SELECT rt.codigo_tema, COUNT(rt.codigo_tema) AS "respuestas"
+FROM respuesta_tema rt, tema t
+WHERE rt.codigo_tema = t.codigo_tema 
+AND rt.estado = 0
+AND t.estado = 0 OR t.estado = 1
+GROUP BY t.codigo_tema, rt.codigo_tema;
+
+SELECT rt.codigo_tema, COUNT(rt.codigo_tema) AS "respuestas"
+FROM respuesta_tema rt
+RIGHT JOIN tema t ON rt.codigo_tema = t.codigo_tema 
+AND rt.estado = 0
+AND t.estado = 0
+GROUP BY t.codigo_tema, rt.codigo_tema;
+
+SELECT * FROM resp_tema;
+
+SELECT contenido FROM multimedia;
+SELECT contenido FROM multimedia WHERE codigo_tema = 3 AND estado = 0;
+
+
+SELECT * FROM TEMA
+UPDATE tema SET descripcion = 'Lorem adipisicing anim sunt eu laborum do. Eu ad amet proident non. Magna minim mollit id consequat dolor sunt reprehenderit incididunt eiusmod consectetur Lorem. Sunt l' where codigo_tema = 4;
+commit;

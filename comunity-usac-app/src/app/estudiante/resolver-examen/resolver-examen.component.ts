@@ -21,10 +21,24 @@ export class ResolverExamenComponent implements OnInit {
   codigoSala: any;
   respuestasEstudianteInfo: any = [];
 
+  timeLeft: number;
+  interval;
+
   constructor(private data: EstudianteService,  private sessionStorage: SessionStorageService, private router: Router, private acceso: AccesoEstudianteService) { }
 
   ngOnInit() {
     this.acceso.validarAcceso();
+  }
+
+  startTimer(time) {
+    this.timeLeft = time;
+    this.interval = setInterval(() => {
+      if(this.timeLeft > 0) {
+        this.timeLeft--;
+      } else {
+        this.accion = 4;
+      }
+    },1000)
   }
 
   accederASala(nombreSala){
@@ -32,6 +46,7 @@ export class ResolverExamenComponent implements OnInit {
       if(data.length > 0){
         this.accion = 1;
         this.codigoSala = data[0].CODIGO_SALA;
+        this.startTimer(parseInt(data[0].TIEMPO));
         this.data.getPreguntasExamen(data[0].CODIGO_EXAMEN).subscribe( data => {
           this.preguntasRespuestas = data
           this.indicePregunta = 0;

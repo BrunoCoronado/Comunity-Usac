@@ -2,15 +2,24 @@
 <br>
 <div class="container">
     <h1 class="panel-title-style text-center display-4">Iniciar Sesión</h1>
+    <ng-container *ngIf = 'error'>
+        <div class="row justify-content-center">
+            <div class="col-md-4 col-sm-10">
+                <div class="alert alert-danger" role="alert">
+                    Error al iniciar sesión
+                </div>
+            </div>
+        </div>
+    </ng-container>
     <div class="row justify-content-center">
         <div class="col-md-4 col-sm-10">
             <div class="form-group">
                 <label>Registro</label>
-                <input #fregistro type="number" class="form-control" placeholder="Registro">
+                <input [(ngModel)]="registro" type="number" class="form-control" placeholder="Registro">
             </div> 
             <div class="form-group">
                 <label>Contraseña</label>
-                <input #fcontrasenia type="password" class="form-control" placeholder="Contraseña">
+                <input [(ngModel)]="contrasenia" type="password" class="form-control" placeholder="Contraseña">
             </div> 
             <div class="form-group">
                 <label>Rol</label>
@@ -20,7 +29,7 @@
                     </ng-container>
                 </select>
             </div> 
-            <button type="submit" class="btn btn-primary btn-block" (click)='iniciarSesion(fregistro.value, fcontrasenia.value, frol.value)'>Iniciar Sesión</button>
+            <button type="submit" class="btn btn-primary btn-block" (click)='iniciarSesion(frol.value)'>Iniciar Sesión</button>
         </div>
     </div>
 </div>

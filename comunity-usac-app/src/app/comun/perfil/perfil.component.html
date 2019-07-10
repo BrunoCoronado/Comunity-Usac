@@ -18,34 +18,36 @@
 <!-- #region USUARIO-->
 <div class="container">
     <br>
-    <img src="../../../assets/system/usaclogo.png" width="200" height="200" class="rounded mx-auto d-block">
+    <img src="http://localhost:3000/comunity-usac/api/usuario-imagen/{{registro}}" width="200" height="200" class="rounded mx-auto d-block">
     <div class="row justify-content-center">
         <div class="col-sm-12 col-md-6">
-            <div class="form-group">
-                <label>Registro</label>
-                <input #fregistro type="number" class="form-control" placeholder="Registro" disabled value="{{ usr.registro }}">
-            </div>
-            <div class="form-group">
-                <label>Nombre</label>
-                <input #fnombre type="text" class="form-control" placeholder="Nombre" [disabled]="!editable$" value="{{ usr.nombre }}">
-            </div> 
-            <div class="form-group">
-                <label>Contaseña</label>
-                <input #fcontrasenia type="password" class="form-control" placeholder="Contraseña" [disabled]="!editable$" value="{{ usr.constrasenia }}">
-            </div> 
-            <div class="form-group">
-                <label>Correo</label>
-                <input #fcorreo type="email" class="form-control" placeholder="Correo" [disabled]="!editable$" value="{{ usr.correo }}">
-            </div> 
-            <div class="form-group">
-                <label>Teléfono</label>
-                <input #ftelefono type="number" class="form-control" placeholder="Teléfono" [disabled]="!editable$" value="{{ usr.telefono }}">
-            </div>
-            <div class="form-group" [hidden]="!editable$">
-                <label>Fotografia</label>
-                <p class="text-muted">*Opcional</p>
-                <input #ffotografia type="file" class="form-control"  placeholder="Teléfono">
-            </div>
+            <form enctype="multipart/form-data">                 
+                <div class="form-group">
+                    <label>Registro</label>
+                    <input #fregistro type="number" class="form-control" placeholder="Registro" disabled value="{{ usr.registro }}">
+                </div>
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input #fnombre type="text" class="form-control" placeholder="Nombre" [disabled]="!editable$" value="{{ usr.nombre }}">
+                </div> 
+                <div class="form-group">
+                    <label>Contaseña</label>
+                    <input #fcontrasenia type="password" class="form-control" placeholder="Contraseña" [disabled]="!editable$" value="{{ usr.constrasenia }}">
+                </div> 
+                <div class="form-group">
+                    <label>Correo</label>
+                    <input #fcorreo type="email" class="form-control" placeholder="Correo" [disabled]="!editable$" value="{{ usr.correo }}">
+                </div> 
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input #ftelefono type="number" class="form-control" placeholder="Teléfono" [disabled]="!editable$" value="{{ usr.telefono }}">
+                </div>
+                <div class="form-group" [hidden]="!editable$">
+                    <label>Fotografia</label>
+                    <p class="text-muted">*Opcional</p>
+                    <input #ffotografia (change)="fileChange($event)" type="file" class="form-control"  placeholder="Teléfono">
+                </div>
+            </form>
         </div>
     </div>
 </div>

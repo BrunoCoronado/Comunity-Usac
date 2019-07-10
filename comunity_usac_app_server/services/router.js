@@ -27,6 +27,12 @@ const grupo = require('../controllers/conversacion/grupo/grupo');
 const miembro_grupo = require('../controllers/conversacion/grupo/miembro-grupo');
 const mensaje_grupo = require('../controllers/conversacion/grupo/mensaje-grupo');
 const estadistica = require('../controllers/estadistica');
+const usuario_imagen = require('../controllers/usuario/usuario-imagen');
+
+const  multipart  =  require('connect-multiparty');
+const multipartMiddlewareUsers = multipart({
+    uploadDir: './assets/user'
+});
 
 router.route('/facultad/:codigo?')
     .get(facultad.get)
@@ -59,8 +65,9 @@ router.route('/ciencia-carrera/:codigo_carrera?/:codigo_ciencia?')
 router.route('/usuario/:registro?')
     .get(usuario.get)
     .post(usuario.post)
-    .put(usuario.put)
+    .put(multipartMiddlewareUsers, usuario.put)
     .delete(usuario.delete);
+
 
 router.route('/usuario-rol/:registro?/:codigo?')
     .post(usuario_rol.post)
@@ -149,5 +156,9 @@ router.route('/mensaje-grupo/:codigo?')
 
 router.route('/estadistica/:tipo/:rol?/:ciencia?')
     .get(estadistica.get);
+
+router.route('/usuario-imagen/:registro')
+    .get(usuario_imagen.get);
+
 
 module.exports = router;

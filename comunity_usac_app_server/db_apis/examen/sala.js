@@ -1,7 +1,7 @@
 const database = require('../../services/database');
 
 async function buscar(data){
-    let query = `SELECT codigo_examen, codigo_sala FROM sala WHERE estado = 0 AND nombre = :nombre`;
+    let query = `SELECT codigo_examen, codigo_sala, tiempo FROM sala WHERE estado = 0 AND nombre = :nombre`;
     const result = await database.ejecutarQuery(query, data);
     return result;
 }

@@ -101,4 +101,5 @@ SELECT * FROM temas_usuario_ciencia WHERE codigo_rol = 2 AND codigo_ciencia = 2 
 
 /*FIN ESTADISTICAS*/
 
+SELECT codigo_examen, codigo_sala, tiempo FROM sala WHERE estado = 0 AND nombre = 'Sala 1'
 

@@ -9,3 +9,10 @@
 .list-group-item-b{
     margin-right: 55%;
 }
+
+.chat-box{
+    width: 100%; 
+    height: 300px; 
+    overflow: auto;
+    overflow-y: auto;
+}

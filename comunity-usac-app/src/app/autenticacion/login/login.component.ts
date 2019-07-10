@@ -14,6 +14,9 @@ import { ConversacionService } from 'src/app/comun/conversacion.service';
 export class LoginComponent implements OnInit {
 
   roles$: any;
+  error: any = false;
+  registro: any;
+  contrasenia: string;
 
   constructor(private Data: AutenticacionService, private sessionStorage: SessionStorageService, private router: Router, private conversacionService: ConversacionService) { }
 
@@ -28,19 +31,21 @@ export class LoginComponent implements OnInit {
     this.Data.getRoles().subscribe( data => this.roles$ = data );
   }
 
-  iniciarSesion(registro, contrasenia, rol){
-    this.Data.autenticar({ registro: registro, contrasenia: contrasenia, codigo_rol: rol }).subscribe( (data: any) => {
+  iniciarSesion(rol){
+    this.Data.autenticar({ registro: this.registro, contrasenia: this.contrasenia, codigo_rol: rol }).subscribe( (data: any) => {
       if(data.length == 1){
-        this.sessionStorage.store('usr', { registro: registro, rol: rol });
+        this.sessionStorage.store('usr', { registro: this.registro, rol: rol });
         if(rol == '1'){
           this.router.navigate(['comunity-usac/administrador']);
         }else{
           this.router.navigate(['comunity-usac/comun/temas']);
-          this.Data.getUsuario(registro).subscribe( data => this.conversacionService.conectar(data) )
+          this.Data.getUsuario(this.registro).subscribe( data => this.conversacionService.conectar(data) )
         }
       }else{
-        console.log('error');
+        this.error = true;
       }
+      this.registro = '';
+      this.contrasenia = '';
     });
   }
 

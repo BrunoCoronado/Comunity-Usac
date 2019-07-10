@@ -1,4 +1,5 @@
 const usuario = require('../../db_apis/usuario/usuario');
+const fs = require("fs");
 
 async function get(request, response, next){
     try {
@@ -29,7 +30,8 @@ async function post(request, response, next){
 
 async function put(request, response, next){
     try {
-        let data = Object.assign({ fotografia: request.body.fotografia }, capturarUsuarioRequest(request));
+        console.log(request.files.imagen.path)
+        let data = Object.assign({ fotografia: request.files.imagen.path }, capturarUsuarioRequest(request));
         const result = await usuario.actualizar(data);
         if(!result.error)
             response.status(201).end();
